@@ -1,7 +1,7 @@
 {
   "name": "js-compiler",
   "version": "1.0.0",
-  "description": "",
+  "description": "Testing compiler written in JS",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/AlanFoster/js-compiler/issues"
   },
-  "homepage": "https://github.com/AlanFoster/js-compiler#readme"
+  "homepage": "https://github.com/AlanFoster/js-compiler#readme",
+  "devDependencies": {
+    "babel-core": "~6.3.21",
+    "babel-loader": "~6.2.0",
+    "babel-preset-es2015": "~6.3.13",
+    "babel-register": "~6.3.13",
+    "del": "~2.2.0",
+    "gulp": "~3.9.0",
+    "gulp-load-plugins": "~1.1.0",
+    "gulp-webpack": "~1.5.0"
+  }
 }
