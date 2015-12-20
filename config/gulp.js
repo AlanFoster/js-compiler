@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import pluginloader from 'gulp-load-plugins';
 import del from 'del';
 import webpackConfiguration from './webpack.js';
+import _ from 'lodash';
 
 const plugins = pluginloader();
 
@@ -24,6 +25,12 @@ gulp.task('build-html', function () {
     return gulp.src(`${paths.src}/**/*.html`)
                 .pipe(gulp.dest(paths.dist));
 });
+
+gulp.task('watch', ['build-html'], function () {
+	  return gulp.src(`${paths.src}/js/app/index.js`)
+             .pipe(plugins.webpack(_.extend({ }, webpackConfiguration, { watch: true })))
+             .pipe(gulp.dest(paths.dist));
+})
 
 gulp.task('build', ['build-js', 'build-html']);
 gulp.task('default', ['build']);
