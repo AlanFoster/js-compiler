@@ -1,0 +1,19 @@
+{
+  "name": "js-compiler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlanFoster/js-compiler.git"
+  },
+  "author": "Alan Foster <alan@alanfoster.me> (http://www.alanfoster.me/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlanFoster/js-compiler/issues"
+  },
+  "homepage": "https://github.com/AlanFoster/js-compiler#readme"
+}
