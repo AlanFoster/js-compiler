@@ -15,7 +15,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('build-js', function () {
-  return gulp.src(`${paths.src}/**/*.js`)
+  return gulp.src(`${paths.src}/js/app/index.js`)
              .pipe(plugins.webpack(webpackConfiguration))
              .pipe(gulp.dest(paths.dist));
 });
