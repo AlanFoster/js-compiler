@@ -8,6 +8,10 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel'
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass?config=otherSassLoaderConfig']
       }
     ]
   },
@@ -15,7 +19,8 @@ module.exports = {
     extensions: [
       '',
       '.js',
-      '.jsx'
+      '.jsx',
+      '.scss'
     ],
     modulesDirectories: [
       'src',

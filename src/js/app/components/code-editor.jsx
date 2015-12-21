@@ -13,7 +13,7 @@ const CodeEditor = React.createClass({
 
   render() {
     return (
-      <div>
+      <div className='code-editor'>
         <textarea onChange={this.onChange} value={this.props.src} />
       </div>
     )
