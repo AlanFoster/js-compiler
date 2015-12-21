@@ -5,7 +5,9 @@ import Lexer from './lexer';
 
 const App = React.createClass({
   getInitialState() {
-    return { src: 'var x;' }
+    return {
+      src: 'var x = 10;'
+    };
   },
 
   onChange(src) {

@@ -1,19 +1,10 @@
 import _ from 'lodash';
-
-const toHash = function (array) {
-  return _.chain(array)
-          .map(key => [key, key])
-          .zipObject()
-          .value();
-};
-
-const Tokens = toHash([
-  'Var',
-  'Equals',
-  'Semicolon',
-  'Identifier',
-  'ERROR'
-]);
+import Tokens from './tokens';
+import {
+  isWhitespace,
+  isLetter,
+  isDigit
+} from './predicates';
 
 const keywords = {
   'var': Tokens.Var
@@ -22,26 +13,6 @@ const keywords = {
 const punctuation = {
   ';': Tokens.Semicolon,
   '=': Tokens.Equals
-};
-
-const isWhitespace = function (char) {
-  return (
-    char === ' ' ||
-    char === '\t' ||
-    char === '\r' ||
-    char === '\n'
-  );
-};
-
-const isLetter = function (char) {
-  return (
-    char >= 'a' && char <= 'z' ||
-    char >= 'A' && char <= 'Z'
-  );
-};
-
-const isDigit = function (char) {
-  return char >= '0' && char <= '9';
 };
 
 class Lexer {
@@ -70,6 +41,7 @@ class Lexer {
     return (
       this.scanIdentifier() ||
       this.scanPunctuation() ||
+      this.scanDigit() ||
       this.error()
     );
   }
@@ -77,10 +49,10 @@ class Lexer {
   scanIdentifier() {
     if (!isLetter(this.peek())) return;
 
-    const buffer = this.takeWhile(next => isLetter(next) || isDigit(next));
-    const type = keywords[buffer] || Tokens.Identifier;
+    const value = this.takeWhile(next => isLetter(next) || isDigit(next));
+    const type = keywords[value] || Tokens.Identifier;
 
-    return {type, value: buffer};
+    return { type, value };
   }
 
   scanPunctuation() {
@@ -88,11 +60,16 @@ class Lexer {
     if (!matchingPunctuation) return;
 
     const value = this.pop();
-    return {type: matchingPunctuation, value}
+    return { type: matchingPunctuation, value };
+  }
+
+  scanDigit() {
+    if (!isDigit(this.peek())) return;
+    return { type: Tokens.Number, value: this.takeWhile(isDigit) };
   }
 
   error() {
-    return {type: Tokens.ERROR, value: this.takeWhile(_ => true)}
+    return { type: Tokens.ERROR, value: this.takeWhile(_ => true) }
   }
 
   skipWhitespace() {
