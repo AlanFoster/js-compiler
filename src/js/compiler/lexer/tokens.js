@@ -13,6 +13,7 @@ const Tokens = toHash([
   'Semicolon',
   'Identifier',
   'Number',
+  'String',
   'ERROR'
 ]);
 

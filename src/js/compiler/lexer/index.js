@@ -42,6 +42,7 @@ class Lexer {
       this.scanIdentifier() ||
       this.scanPunctuation() ||
       this.scanDigit() ||
+      this.scanString() ||
       this.error()
     );
   }
@@ -68,12 +69,32 @@ class Lexer {
     return { type: Tokens.Number, value: this.takeWhile(isDigit) };
   }
 
-  error() {
-    return { type: Tokens.ERROR, value: this.takeWhile(_ => true) }
+  scanString() {
+    return (
+      this.scanStringWithOpening("'") ||
+      this.scanStringWithOpening('"')
+    );
   }
 
   skipWhitespace() {
     this.takeWhile(isWhitespace);
+  }
+
+  scanStringWithOpening(opening) {
+    if (this.peek() !== opening) return;
+
+    let value = this.pop() + this.takeWhile(next => next !== opening);
+    if (this.peek() !== opening) {
+      return this.error(value);
+    }
+
+    value += this.pop();
+
+    return { type: Tokens.String, value }
+  }
+
+  error(currentBuffer = '') {
+    return { type: Tokens.ERROR, value: currentBuffer + this.takeWhile(_ => true) }
   }
 
   peek() {
