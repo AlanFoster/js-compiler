@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import CodeEditor from './code-editor';
 import Lexer from './lexer';
+import Parser from './parser';
 
 const App = React.createClass({
   getInitialState() {
@@ -21,7 +22,11 @@ const App = React.createClass({
         <div>{Object.keys(this.props.compiler).join(', ')}</div>
 
         <CodeEditor src={this.state.src} onChange={this.onChange} />
-        <Lexer src={this.state.src} compiler={this.props.compiler} />
+
+        <div className='stages'>
+          <Lexer src={this.state.src} compiler={this.props.compiler} />
+          <Parser src={this.state.src} compiler={this.props.compiler} />
+        </div>
       </div>
     );
   }

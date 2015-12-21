@@ -7,3 +7,12 @@
     margin: 5px;
   }
 }
+
+.stages {
+  display: flex;
+
+  .lexer, .parser {
+    overflow: scroll;
+    width: 50%;
+  }
+}
