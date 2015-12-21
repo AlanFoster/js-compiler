@@ -7,11 +7,24 @@ import {
 } from './predicates';
 
 const keywords = {
-  'var': Tokens.Var
+  'var': Tokens.Var,
+  'if': Tokens.If
 };
 
 const punctuation = {
   ';': Tokens.Semicolon,
+  '+': Tokens.Plus,
+  '-': Tokens.Minus,
+  '/': Tokens.Divide,
+  '*': Tokens.Multiply,
+  ':': Tokens.Colon,
+  '?': Tokens.QuestionMark,
+  '(': Tokens.LeftParen,
+  ')': Tokens.RightParen,
+  '{': Tokens.LeftBrace,
+  '}': Tokens.RightBrace,
+  '[': Tokens.LeftSquare,
+  ']': Tokens.RightSquare,
   '=': Tokens.Equals
 };
 
