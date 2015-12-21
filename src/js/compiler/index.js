@@ -1,8 +1,8 @@
+import lexer from './lexer';
+
 export default {
-  lexer() {
-    return null;
-  },
+  lexer,
   parser() {
     return null;
   }
-}
+};

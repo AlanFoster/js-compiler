@@ -1,5 +1,4 @@
 module.exports = {
-  bail: true,
   output: {
     filename: 'index.js'
   },
