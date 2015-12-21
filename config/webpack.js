@@ -23,7 +23,7 @@ module.exports = {
       '.scss'
     ],
     modulesDirectories: [
-      'src',
+      'src/js',
       'node_modules'
     ]
   }

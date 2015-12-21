@@ -14,7 +14,7 @@ const paths = {
 
 const runKarmaServer = function (configFile, done) {
   new KarmaServer({ configFile: __dirname + configFile }, done).start();
-}
+};
 
 gulp.task('clean', function () {
 	return del([paths.dist]);
@@ -24,7 +24,7 @@ gulp.task('test', function (done) {
   runKarmaServer('/karma.js', done);
 });
 
-gulp.task('test-watch', function (done) {
+gulp.task('test-dev', function (done) {
   runKarmaServer('/karma.ci.js', done);
 });
 
