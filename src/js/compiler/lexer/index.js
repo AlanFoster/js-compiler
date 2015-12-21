@@ -8,11 +8,15 @@ import {
 
 const keywords = {
   'var': Tokens.Var,
-  'if': Tokens.If
+  'if': Tokens.If,
+  'true': Tokens.True,
+  'false': Tokens.false
 };
 
 const punctuation = {
   ';': Tokens.Semicolon,
+  '!': Tokens.Not,
+  '.': Tokens.Dot,
   '+': Tokens.Plus,
   '-': Tokens.Minus,
   '/': Tokens.Divide,
@@ -25,7 +29,12 @@ const punctuation = {
   '}': Tokens.RightBrace,
   '[': Tokens.LeftSquare,
   ']': Tokens.RightSquare,
-  '=': Tokens.Equals
+  '=': Tokens.Equals,
+  '==': Tokens.EqualsEquals,
+  '|': Tokens.Pipe,
+  '||': Tokens.Or,
+  '&': Tokens.And,
+  '&&': Tokens.AndAnd
 };
 
 class Lexer {
@@ -70,11 +79,13 @@ class Lexer {
   }
 
   scanPunctuation() {
-    const matchingPunctuation = punctuation[this.peek()];
-    if (!matchingPunctuation) return;
+    if (!punctuation[this.peek()]) return;
 
-    const value = this.pop();
-    return { type: matchingPunctuation, value };
+    const next = this.pop();
+    const isTwoLengthPunctuation = punctuation[next  + this.peek()];
+    const value = isTwoLengthPunctuation ? (next + this.pop()) : next;
+
+    return { type: punctuation[value], value };
   }
 
   scanDigit() {

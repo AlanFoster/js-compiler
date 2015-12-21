@@ -4,9 +4,13 @@ const Tokens = {
   // Reserved Words
   'Var': 'Var',
   'If': 'If',
+  'True': 'True',
+  'False': 'False',
 
   // Punctuation
   'Semicolon': 'Semicolon',
+  'Not': 'Not',
+  'Dot': 'Dot',
   'Plus': 'Plus',
   'Minus': 'Minus',
   'Divide': 'Divide',
@@ -20,6 +24,11 @@ const Tokens = {
   'LeftSquare': 'LeftSquare',
   'RightSquare': 'RightSquare',
   'Equals': 'Equals',
+  'EqualsEquals': 'EqualsEquals',
+  'Pipe': 'Pipe',
+  'Or': 'Or',
+  'And': 'And',
+  'AndAnd': 'AndAnd',
 
   // Dynamic
   'Identifier': 'Identifier',
