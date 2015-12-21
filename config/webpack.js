@@ -15,6 +15,7 @@ module.exports = {
     extensions: [
       '',
       '.js',
+      '.jsx'
     ],
     modulesDirectories: [
       'src',

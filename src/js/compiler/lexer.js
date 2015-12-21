@@ -1,17 +1,17 @@
 import _ from 'lodash';
 
 const toHash = function (array) {
-	return _.chain(array)
+  return _.chain(array)
           .map(key => [key, key])
           .zipObject()
           .value();
 };
 
 const Tokens = toHash([
-	'Var',
-	'Equals',
-	'Semicolon',
-	'Identifier',
+  'Var',
+  'Equals',
+  'Semicolon',
+  'Identifier',
   'ERROR'
 ]);
 
@@ -26,7 +26,7 @@ const punctuation = {
 
 const isWhitespace = function (char) {
   return (
-    char === ' '  ||
+    char === ' ' ||
     char === '\t' ||
     char === '\r' ||
     char === '\n'
@@ -45,7 +45,7 @@ const isDigit = function (char) {
 };
 
 class Lexer {
-  constructor(string) {
+  constructor(string = '') {
     this.string = string;
     this.position = 0;
   }
@@ -71,7 +71,7 @@ class Lexer {
       this.scanIdentifier() ||
       this.scanPunctuation() ||
       this.error()
-    );  
+    );
   }
 
   scanIdentifier() {
@@ -80,7 +80,7 @@ class Lexer {
     const buffer = this.takeWhile(next => isLetter(next) || isDigit(next));
     const type = keywords[buffer] || Tokens.Identifier;
 
-    return { type, value: buffer };
+    return {type, value: buffer};
   }
 
   scanPunctuation() {
@@ -88,11 +88,11 @@ class Lexer {
     if (!matchingPunctuation) return;
 
     const value = this.pop();
-    return { type: matchingPunctuation, value }
+    return {type: matchingPunctuation, value}
   }
 
   error() {
-    return { type: Tokens.ERROR, value: this.takeWhile(_ => true) }
+    return {type: Tokens.ERROR, value: this.takeWhile(_ => true)}
   }
 
   skipWhitespace() {
