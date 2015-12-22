@@ -99,7 +99,7 @@ describe('Parser', function () {
 
   describe('infix operators', function () {
     describe('+', function () {
-      it('parses digits by themselves', function () {
+      it('parses binary addition', function () {
         const tokens = [
           { type: 'Number', value: '1' },
           { type: 'Plus', value: 'Plus' },
@@ -116,7 +116,7 @@ describe('Parser', function () {
       });
 
       describe('-', function () {
-        it('parses digits by themselves', function () {
+        it('parses binary subtraction', function () {
           const tokens = [
             { type: 'Number', value: '1' },
             { type: 'Minus', value: 'Minus' },
@@ -126,6 +126,42 @@ describe('Parser', function () {
           expect(this.parser(tokens)).toEqual([
             {
               type: 'Minus',
+              left: { type: 'Number', value: '1' },
+              right: { type: 'Number', value: '2' }
+            }
+          ]);
+        });
+      });
+
+      describe('*', function () {
+        it('parses binary multiplication', function () {
+          const tokens = [
+            { type: 'Number', value: '1' },
+            { type: 'Multiply', value: 'Multiply' },
+            { type: 'Number', value: '2' }
+          ];
+
+          expect(this.parser(tokens)).toEqual([
+            {
+              type: 'Multiply',
+              left: { type: 'Number', value: '1' },
+              right: { type: 'Number', value: '2' }
+            }
+          ]);
+        });
+      });
+
+      describe('/', function () {
+        it('parses binary division', function () {
+          const tokens = [
+            { type: 'Number', value: '1' },
+            { type: 'Divide', value: 'Divide' },
+            { type: 'Number', value: '2' }
+          ];
+
+          expect(this.parser(tokens)).toEqual([
+            {
+              type: 'Divide',
               left: { type: 'Number', value: '1' },
               right: { type: 'Number', value: '2' }
             }

@@ -83,6 +83,8 @@ const createParser = function () {
   ];
 
   const infixSymbols = [
+    infixSymbol(Tokens.Multiply).withLbp(13).withRbp(13),
+    infixSymbol(Tokens.Divide).withLbp(13).withRbp(13),
     infixSymbol(Tokens.Minus).withLbp(13).withRbp(13),
     infixSymbol(Tokens.Plus).withLbp(13).withRbp(13)
   ];
