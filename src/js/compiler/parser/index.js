@@ -1,8 +1,12 @@
 import Tokens from './../tokens';
 import _ from 'lodash';
-
-const notImplemented = () => { throw new Error('Not Implemented') };
-const isNotImplemented = (func) => (func === notImplemented);
+import {
+  literalSymbol,
+  prefixSymbol,
+  infixSymbol,
+  constantSymbol,
+  EOFSymbol
+} from './symbols';
 
 class Parser {
   constructor() {
@@ -56,127 +60,38 @@ class Parser {
   }
 }
 
-class Symbol {
-  constructor(type) {
-    this.type = type;
-    this.nud = notImplemented;
-    this.rbp = 0;
-    this.lbp = 0;
-    this.led = notImplemented;
-  }
-
-  withNud(nud) {
-    this.nud = nud;
-    return this;
-  }
-
-  withLbp(lbp) {
-    this.lbp = lbp;
-    return this;
-  }
-
-  withRbp(rbp) {
-    this.rbp = rbp;
-    return this;
-  }
-
-  withLed(led) {
-    this.led = led;
-    return this;
-  }
-
-  mergeWith(other) {
-    if (!other) return Object.create(this);
-
-    const combinedSymbol = Object.create(other);
-
-    if (isNotImplemented(other.nud)) {
-      combinedSymbol.nud = this.nud;
-    }
-
-    if (isNotImplemented(other.led)) {
-      combinedSymbol.led = this.led;
-    }
-
-    return combinedSymbol;
-  }
-}
-
-class LiteralSymbol extends Symbol {
-  static create(type) {
-    return new this(type).withNud(({ type, value }) => ({ type, value }))
-  }
-}
-
-class PrefixSymbol extends Symbol {
-  static create(type) {
-    const symbol = new this(type);
-    return symbol.withNud(function (_token, symbolConsumer) {
-      return {
-        type,
-        right: symbolConsumer.expression(symbol.rbp)
-      }
-    });
-  }
-}
-
-class InfixSymbol extends Symbol {
-  static create(type) {
-    const symbol = new this(type);
-    return symbol.withLed(function (left, symbolConsumer) {
-      return {
-        type,
-        left,
-        right: symbolConsumer.expression(symbol.rbp)
-      }
-    })
-  }
-}
-
-class ConstantSymbol extends Symbol {
-  static create(type) {
-    return new this(type).withNud(({ type, value }) => ({ type, value }))
-  }
-}
-
-class EOFSymbol extends ConstantSymbol {
-  static create() {
-    return new this(Tokens.EOF).withNud(({ type, value }) => ({ type, value }))
-  }
-}
-
 const createParser = function () {
   const parser = new Parser();
 
   const constantSymbols = [
-    ConstantSymbol.create(Tokens.True),
-    ConstantSymbol.create(Tokens.False)
+    constantSymbol(Tokens.True),
+    constantSymbol(Tokens.False)
   ];
 
   const literalSymbols = [
-    LiteralSymbol.create(Tokens.String),
-    LiteralSymbol.create(Tokens.Number),
-    LiteralSymbol.create(Tokens.LeftParen).withNud((value, symbolConsumer) => {
+    literalSymbol(Tokens.String),
+    literalSymbol(Tokens.Number),
+    literalSymbol(Tokens.LeftParen).withNud((value, symbolConsumer) => {
       symbolConsumer.next();
     }),
-    LiteralSymbol.create(Tokens.RightParen)
+    literalSymbol(Tokens.RightParen)
   ];
 
   const prefixSymbols = [
-    PrefixSymbol.create(Tokens.Minus).withLbp(15).withRbp(15),
-    PrefixSymbol.create(Tokens.Plus).withLbp(15).withRbp(15)
+    prefixSymbol(Tokens.Minus).withLbp(15).withRbp(15),
+    prefixSymbol(Tokens.Plus).withLbp(15).withRbp(15)
   ];
 
   const infixSymbols = [
-    InfixSymbol.create(Tokens.Minus).withLbp(13).withRbp(13),
-    InfixSymbol.create(Tokens.Plus).withLbp(13).withRbp(13)
+    infixSymbol(Tokens.Minus).withLbp(13).withRbp(13),
+    infixSymbol(Tokens.Plus).withLbp(13).withRbp(13)
   ];
 
   const symbols = [
     ...infixSymbols,
     ...prefixSymbols,
     ...literalSymbols,
-    EOFSymbol.create()
+    EOFSymbol()
   ];
 
   _.each(symbols, (symbol) => parser.registerSymbol(symbol));
