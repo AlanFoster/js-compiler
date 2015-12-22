@@ -36,6 +36,7 @@ const Tokens = {
   'String': 'String',
 
   // Misc
+  'EOF': 'EOF',
   'ERROR': 'ERROR'
 };
 

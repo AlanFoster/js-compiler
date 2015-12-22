@@ -12,7 +12,8 @@
   display: flex;
 
   .lexer, .parser {
-    overflow: scroll;
     width: 50%;
+    overflow: scroll;
+    padding: 20px;
   }
 }

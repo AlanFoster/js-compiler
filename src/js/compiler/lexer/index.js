@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Tokens from './tokens';
+import Tokens from './../tokens';
 import {
   isWhitespace,
   isLetter,

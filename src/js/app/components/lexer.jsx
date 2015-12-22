@@ -1,8 +1,9 @@
 import React from 'react';
+import attempt from './attempt';
 
 const LexerExample = React.createClass({
   renderOutput(src, compiler) {
-    const result = compiler.lexer(src);
+    const result = attempt(() => compiler.lexer(src));
     return (
       <pre>{JSON.stringify(result, null, 4)}</pre>
     );

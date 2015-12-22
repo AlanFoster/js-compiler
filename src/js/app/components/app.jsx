@@ -7,11 +7,17 @@ import Parser from './parser';
 const App = React.createClass({
   getInitialState() {
     return {
-      src: 'var x = "hello world";'
+      src: (
+        window.location.hash.substring(1) ||
+        window.localStorage.src ||
+        '1 + 1'
+      )
     };
   },
 
   onChange(src) {
+    window.location.hash = src;
+    window.localStorage.src = src;
     this.setState({ src })
   },
 

@@ -7,7 +7,7 @@ module.exports = function (config) {
     browsers: ['Chrome'],
     frameworks: ['jasmine'],
     files: [
-      'test/**/*.spec.js'
+      'test/**/*.spec.js?(x)'
     ],
     preprocessors: {
       'test/**/*.spec.js': ['webpack']
