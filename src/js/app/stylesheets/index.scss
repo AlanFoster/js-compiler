@@ -11,8 +11,8 @@
 .stages {
   display: flex;
 
-  .lexer, .parser {
-    width: 50%;
+  .lexer, .parser, .interpreter {
+    width: 33%;
     overflow: scroll;
     padding: 20px;
   }

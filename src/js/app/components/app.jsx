@@ -3,6 +3,7 @@ import _ from 'lodash';
 import CodeEditor from './code-editor';
 import Lexer from './lexer';
 import Parser from './parser';
+import Interpreter from './interpreter';
 
 const App = React.createClass({
   getInitialState() {
@@ -32,6 +33,7 @@ const App = React.createClass({
         <div className='stages'>
           <Lexer src={this.state.src} compiler={this.props.compiler} />
           <Parser src={this.state.src} compiler={this.props.compiler} />
+          <Interpreter src={this.state.src} compiler={this.props.compiler} />
         </div>
       </div>
     );

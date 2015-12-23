@@ -1,6 +1,5 @@
 describe('Parser', function () {
   beforeEach(function () {
-    this.lexer = require('compiler/lexer').default;
     this.parser = require('compiler/parser').default;
   });
 
@@ -10,7 +9,7 @@ describe('Parser', function () {
     });
 
     it('parses an empty stream of tokens', function () {
-      expect(this.lexer([])).toEqual([]);
+      expect(this.parser([])).toEqual([]);
     });
   });
 
@@ -269,6 +268,39 @@ describe('Parser', function () {
               right: { type: 'Number', value: '10' }
             }
           ]);
+        });
+
+        describe('precedence for 100 + 100 / 2', function () {
+          it('allows assignment', function () {
+            const tokens = [
+              { type: 'Number', value: '100' },
+              { type: 'Plus', value: 'Plus' },
+              { type: 'Number', value: '100' },
+              { type: 'Divide', value: 'Divide' },
+              { type: 'Number', value: '2' },
+            ];
+
+            expect(this.parser(tokens)).toEqual([
+              {
+                "type": "Plus",
+                "left": {
+                  "type": "Number",
+                  "value": "100"
+                },
+                "right": {
+                  "type": "Divide",
+                  "left": {
+                    "type": "Number",
+                    "value": "100"
+                  },
+                  "right": {
+                    "type": "Number",
+                    "value": "2"
+                  }
+                }
+              }
+            ]);
+          });
         });
       });
     });

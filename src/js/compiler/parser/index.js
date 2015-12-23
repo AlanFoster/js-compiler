@@ -143,8 +143,8 @@ const createParser = function () {
       })
     ,
 
-    infixSymbol(Tokens.Multiply).withLbp(13).withRbp(13),
-    infixSymbol(Tokens.Divide).withLbp(13).withRbp(13),
+    infixSymbol(Tokens.Multiply).withLbp(14).withRbp(14),
+    infixSymbol(Tokens.Divide).withLbp(14).withRbp(14),
     infixSymbol(Tokens.Minus).withLbp(13).withRbp(13),
     infixSymbol(Tokens.Plus).withLbp(13).withRbp(13),
 
