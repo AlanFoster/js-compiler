@@ -26,6 +26,32 @@ describe('Parser', function () {
     });
   });
 
+  describe('literals', function () {
+    describe('true', function (){
+      it('parses True', function () {
+        const tokens = [
+          { type: 'True', value: 'True' }
+        ];
+
+        expect(this.parser(tokens)).toEqual([
+          { type: 'True', value: 'True' }
+        ]);
+      });
+    });
+
+    describe('false', function (){
+      it('parses False', function () {
+        const tokens = [
+          { type: 'False', value: 'False' }
+        ];
+
+        expect(this.parser(tokens)).toEqual([
+          { type: 'False', value: 'False' }
+        ]);
+      });
+    });
+  });
+
   describe('prefix operators', function () {
     describe('-', function () {
       it('parses digits by themselves', function () {
@@ -97,6 +123,65 @@ describe('Parser', function () {
     });
   });
 
+  describe('function calls', function () {
+    it('parses empty arguments', function () {
+      const tokens = [
+        { type: 'Identifier', value: 'functionName' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'RightParen', value: 'RightParen' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'application',
+          left: { type: 'Identifier', value: 'functionName' },
+          args: []
+        }
+      ]);
+    });
+
+    it('parses when there is one number argument', function () {
+      const tokens = [
+        { type: 'Identifier', value: 'functionName' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'Number', value: '1' },
+        { type: 'RightParen', value: 'RightParen' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'application',
+          left: { type: 'Identifier', value: 'functionName' },
+          args: [
+            { type: 'Number', value: '1' }
+          ]
+        }
+      ]);
+    });
+
+    it('parses when there is multiple arguments', function () {
+      const tokens = [
+        { type: 'Identifier', value: 'functionName' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'Number', value: '1' },
+        { type: 'Comma', value: ',' },
+        { type: 'Number', value: '2' },
+        { type: 'RightParen', value: 'RightParen' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'application',
+          left: { type: 'Identifier', value: 'functionName' },
+          args: [
+            { type: 'Number', value: '1' },
+            { type: 'Number', value: '2' }
+          ]
+        }
+      ]);
+    });
+  });
+
   describe('infix operators', function () {
     describe('+', function () {
       it('parses binary addition', function () {
@@ -156,14 +241,32 @@ describe('Parser', function () {
           const tokens = [
             { type: 'Number', value: '1' },
             { type: 'Divide', value: 'Divide' },
-            { type: 'Number', value: '2' }
+            { type: 'Identifier', value: 'a' }
           ];
 
           expect(this.parser(tokens)).toEqual([
             {
               type: 'Divide',
               left: { type: 'Number', value: '1' },
-              right: { type: 'Number', value: '2' }
+              right: { type: 'Identifier', value: 'a' }
+            }
+          ]);
+        });
+      });
+
+      describe('=', function () {
+        it('allows assignment', function () {
+          const tokens = [
+            { type: 'Identifier', value: 'x' },
+            { type: 'Equals', value: 'Equals' },
+            { type: 'Number', value: '10' }
+          ];
+
+          expect(this.parser(tokens)).toEqual([
+            {
+              type: 'Equals',
+              left: { type: 'Identifier', value: 'x' },
+              right: { type: 'Number', value: '10' }
             }
           ]);
         });

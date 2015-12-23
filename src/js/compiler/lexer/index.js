@@ -9,13 +9,15 @@ import {
 const keywords = {
   'var': Tokens.Var,
   'if': Tokens.If,
+  'else': Tokens.Else,
   'true': Tokens.True,
-  'false': Tokens.false
+  'false': Tokens.False
 };
 
 const punctuation = {
   ';': Tokens.Semicolon,
   '!': Tokens.Not,
+  ',': Tokens.Comma,
   '.': Tokens.Dot,
   '+': Tokens.Plus,
   '-': Tokens.Minus,

@@ -47,7 +47,7 @@ describe('Lexer', function () {
     });
   });
 
-  describe('punctuation', function () {
+  describe('simple lexing', function () {
     const it_lexes = function (string) {
       return {
         toBe(type) {
@@ -60,27 +60,38 @@ describe('Lexer', function () {
       }
     };
 
-    it_lexes(';').toBe('Semicolon');
-    it_lexes('!').toBe('Not');
-    it_lexes('.').toBe('Dot');
-    it_lexes('+').toBe('Plus');
-    it_lexes('-').toBe('Minus');
-    it_lexes('/').toBe('Divide');
-    it_lexes('*').toBe('Multiply');
-    it_lexes(':').toBe('Colon');
-    it_lexes('?').toBe('QuestionMark');
-    it_lexes('(').toBe('LeftParen');
-    it_lexes(')').toBe('RightParen');
-    it_lexes('{').toBe('LeftBrace');
-    it_lexes('}').toBe('RightBrace');
-    it_lexes('[').toBe('LeftSquare');
-    it_lexes(']').toBe('RightSquare');
-    it_lexes('=').toBe('Equals');
-    it_lexes('==').toBe('EqualsEquals');
-    it_lexes('|').toBe('Pipe');
-    it_lexes('||').toBe('Or');
-    it_lexes('&').toBe('And');
-    it_lexes('&&').toBe('AndAnd');
+    describe('punctuation', function () {
+      it_lexes(';').toBe('Semicolon');
+      it_lexes('!').toBe('Not');
+      it_lexes('.').toBe('Dot');
+      it_lexes(',').toBe('Comma');
+      it_lexes('+').toBe('Plus');
+      it_lexes('-').toBe('Minus');
+      it_lexes('/').toBe('Divide');
+      it_lexes('*').toBe('Multiply');
+      it_lexes(':').toBe('Colon');
+      it_lexes('?').toBe('QuestionMark');
+      it_lexes('(').toBe('LeftParen');
+      it_lexes(')').toBe('RightParen');
+      it_lexes('{').toBe('LeftBrace');
+      it_lexes('}').toBe('RightBrace');
+      it_lexes('[').toBe('LeftSquare');
+      it_lexes(']').toBe('RightSquare');
+      it_lexes('=').toBe('Equals');
+      it_lexes('==').toBe('EqualsEquals');
+      it_lexes('|').toBe('Pipe');
+      it_lexes('||').toBe('Or');
+      it_lexes('&').toBe('And');
+      it_lexes('&&').toBe('AndAnd');
+    });
+
+    describe('reserved words', function () {
+      it_lexes('var').toBe('Var');
+      it_lexes('if').toBe('If');
+      it_lexes('else').toBe('Else');
+      it_lexes('true').toBe('True');
+      it_lexes('false').toBe('False');
+    });
   });
 
   describe('numbers', function () {

@@ -3,16 +3,24 @@ import Tokens from './../tokens';
 import _ from 'lodash';
 
 const extractValueAndType = function (object) {
-  return _.pick(object, 'value', 'type');
+  return _.pick(object, 'type', 'value');
+};
+
+const createSymbol = function (type) {
+    return new Symbol(type);
 };
 
 const literalSymbol = function (type) {
-  return new Symbol(type).withNud(extractValueAndType);
+  return createSymbol(type).withNud(extractValueAndType);
 };
 
 const prefixSymbol = function(type) {
-  const symbol = new Symbol(type);
+  const symbol = createSymbol(type);
   return symbol.withNud(function (_token, symbolConsumer) {
+    if (symbolConsumer.hasTopToken(Tokens.EOF)) {
+      throw new Error('Unexpected end of file');
+    }
+
     return {
       type,
       right: symbolConsumer.expression(symbol.rbp)
@@ -21,8 +29,12 @@ const prefixSymbol = function(type) {
 };
 
 const infixSymbol = function(type) {
-  const symbol = new Symbol(type);
+  const symbol = createSymbol(type);
   return symbol.withLed(function (left, symbolConsumer) {
+    if (symbolConsumer.hasTopToken(Tokens.EOF)) {
+      throw new Error('Unexpected end of file');
+    }
+
     return {
       type,
       left,
@@ -31,18 +43,14 @@ const infixSymbol = function(type) {
   })
 };
 
-const constantSymbol = function (type) {
-  return new Symbol(type).withNud(extractValueAndType);
-};
-
 const EOFSymbol = function () {
-  return new Symbol(Tokens.EOF).withNud(extractValueAndType)
+  return createSymbol(Tokens.EOF).withNud(extractValueAndType)
 };
 
 export {
+  createSymbol,
   literalSymbol,
   prefixSymbol,
   infixSymbol,
-  constantSymbol,
   EOFSymbol
 }

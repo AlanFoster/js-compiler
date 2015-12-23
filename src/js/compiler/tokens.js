@@ -4,12 +4,14 @@ const Tokens = {
   // Reserved Words
   'Var': 'Var',
   'If': 'If',
+  'Else': 'Else',
   'True': 'True',
   'False': 'False',
 
   // Punctuation
   'Semicolon': 'Semicolon',
   'Not': 'Not',
+  'Comma': 'Comma',
   'Dot': 'Dot',
   'Plus': 'Plus',
   'Minus': 'Minus',
