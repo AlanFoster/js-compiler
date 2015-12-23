@@ -11,7 +11,7 @@ const operators = {
 const firstMatchingResult = function ([head, ...tail], ...args) {
   const result = head.call(this, ...args);
   if (typeof result !== 'undefined') return result;
-  return firstMatchingResult(tail, ...args);
+  return firstMatchingResult.call(this, tail, ...args);
 };
 
 class Interpreter {
@@ -26,6 +26,7 @@ class Interpreter {
     return firstMatchingResult.call(this, [
       this.visitOperator,
       this.visitLiteral,
+      this.visitAssignment,
       this.error
     ], node);
   }
@@ -41,6 +42,12 @@ class Interpreter {
     }
 
     return matchingOperator(this.visitNode(right));
+  }
+
+  visitAssignment(node) {
+    if (node.type !== Tokens.Equals) return;
+    // TODO Place assignment into a symbol table
+    return this.visitNode(node.right);
   }
 
   visitLiteral(node) {

@@ -126,4 +126,20 @@ describe('Interpreter', function () {
     });
   });
 
+  describe('assignment', function () {
+    it ('assignment returns its value', function () {
+      const tree = [
+        {
+          type: "Equals",
+          left: {
+            type: "Identifier",
+            value: "a"
+          },
+          right: { type: "Number", value: "100" }
+        }
+      ];
+
+      expect(this.interpreter(tree)).toEqual(100);
+    });
+  });
 });
