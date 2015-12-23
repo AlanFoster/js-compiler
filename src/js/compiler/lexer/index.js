@@ -65,7 +65,7 @@ class Lexer {
     return (
       this.scanIdentifier() ||
       this.scanPunctuation() ||
-      this.scanDigit() ||
+      this.scanNumber() ||
       this.scanString() ||
       this.error()
     );
@@ -90,9 +90,22 @@ class Lexer {
     return { type: punctuation[value], value };
   }
 
-  scanDigit() {
+  scanNumber() {
     if (!isDigit(this.peek())) return;
-    return { type: Tokens.Number, value: this.takeWhile(isDigit) };
+
+    let value = this.takeWhile(isDigit);
+
+    if (this.peek() === '.') {
+      value += this.pop();
+
+      if (!isDigit(this.peek())) {
+        return this.error(value);
+      }
+
+      value += this.takeWhile(isDigit);
+    }
+
+    return { type: Tokens.Number, value };
   }
 
   scanString() {

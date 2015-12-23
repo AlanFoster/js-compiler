@@ -101,12 +101,22 @@ describe('Lexer', function () {
       ]);
     });
 
-    it('only handles digits', function () {
+    it('handles digits with precision', function () {
+      expect(this.lexer("13.37")).toEqual([
+        { type: 'Number', value: '13.37' }
+      ]);
+    });
+
+    it('does not consider unary operators', function () {
       expect(this.lexer("-13.37")).toEqual([
         { type: 'Minus', value: '-' },
-        { type: 'Number', value: '13' },
-        { type: 'Dot', value: '.' },
-        { type: 'Number', value: '37' }
+        { type: 'Number', value: '13.37' }
+      ]);
+    });
+
+    it('returns an error token when it could not match successfully', function () {
+      expect(this.lexer("13.")).toEqual([
+        { type: 'ERROR', value: '13.' }
       ]);
     });
   });
