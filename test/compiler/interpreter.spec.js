@@ -142,4 +142,158 @@ describe('Interpreter', function () {
       expect(this.interpreter(tree)).toEqual(100);
     });
   });
+
+  describe('predicates', function () {
+    describe ('>', function () {
+      it('returns true when LHS is greater than', function () {
+        const tree = [
+          {
+            type: 'GreaterThan',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+
+      it('returns false when LHS is the same as', function () {
+        const tree = [
+          {
+            type: 'GreaterThan',
+            left: { type: 'Number', value: '0' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+
+      it('returns false when LHS is less than', function () {
+        const tree = [
+          {
+            type: 'GreaterThan',
+            left: { type: 'Number', value: '-1' },
+            right: { type: 'Number', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+    });
+
+    describe ('>=', function () {
+      it('returns true when LHS is greater than', function () {
+        const tree = [
+          {
+            type: 'GreaterThanEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+
+      it('returns true when LHS is the same as', function () {
+        const tree = [
+          {
+            type: 'GreaterThanEquals',
+            left: { type: 'Number', value: '0' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+
+      it('returns false when LHS is less than', function () {
+        const tree = [
+          {
+            type: 'GreaterThanEquals',
+            left: { type: 'Number', value: '-1' },
+            right: { type: 'Number', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+    });
+
+    describe ('<', function () {
+      it('returns false when LHS is greater than', function () {
+        const tree = [
+          {
+            type: 'LessThan',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+
+      it('returns false when LHS is the same as', function () {
+        const tree = [
+          {
+            type: 'LessThan',
+            left: { type: 'Number', value: '0' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+
+      it('returns true when LHS is less than', function () {
+        const tree = [
+          {
+            type: 'LessThan',
+            left: { type: 'Number', value: '-1' },
+            right: { type: 'Number', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+    });
+
+    describe ('<=', function () {
+      it('returns false when LHS is greater than', function () {
+        const tree = [
+          {
+            type: 'LessThanEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+
+      it('returns true when LHS is the same as', function () {
+        const tree = [
+          {
+            type: 'LessThanEquals',
+            left: { type: 'Number', value: '0' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+
+      it('returns true when LHS is less than', function () {
+        const tree = [
+          {
+            type: 'LessThanEquals',
+            left: { type: 'Number', value: '-1' },
+            right: { type: 'Number', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+    });
+  });
 });

@@ -36,7 +36,11 @@ const punctuation = {
   '|': Tokens.Pipe,
   '||': Tokens.Or,
   '&': Tokens.And,
-  '&&': Tokens.AndAnd
+  '&&': Tokens.AndAnd,
+  '>': Tokens.GreaterThan,
+  '>=': Tokens.GreaterThanEquals,
+  '<': Tokens.LessThan,
+  '<=': Tokens.LessThanEquals
 };
 
 class Lexer {

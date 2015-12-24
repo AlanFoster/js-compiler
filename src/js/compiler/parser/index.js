@@ -148,6 +148,11 @@ const createParser = function () {
     infixSymbol(Tokens.Minus).withLbp(13).withRbp(13),
     infixSymbol(Tokens.Plus).withLbp(13).withRbp(13),
 
+    infixSymbol(Tokens.GreaterThan).withLbp(11).withRbp(11),
+    infixSymbol(Tokens.GreaterThanEquals).withLbp(11).withRbp(11),
+    infixSymbol(Tokens.LessThan).withLbp(11).withRbp(11),
+    infixSymbol(Tokens.LessThanEquals).withLbp(11).withRbp(11),
+
     infixSymbol(Tokens.Pipe).withLbp(9).withRbp(9),
     infixSymbol(Tokens.And).withLbp(7).withRbp(7),
 

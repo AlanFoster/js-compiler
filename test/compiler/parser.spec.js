@@ -253,6 +253,24 @@ describe('Parser', function () {
         });
       });
 
+      describe('>', function () {
+        it('parses binary division', function () {
+          const tokens = [
+            { type: 'Number', value: '0' },
+            { type: 'GreaterThan', value: 'GreaterThan' },
+            { type: 'Number', value: '10' }
+          ];
+
+          expect(this.parser(tokens)).toEqual([
+            {
+              type: 'GreaterThan',
+              left: { type: 'Number', value: '0' },
+              right: { type: 'Number', value: '10' }
+            }
+          ]);
+        });
+      });
+
       describe('=', function () {
         it('allows assignment', function () {
           const tokens = [
@@ -277,7 +295,7 @@ describe('Parser', function () {
               { type: 'Plus', value: 'Plus' },
               { type: 'Number', value: '100' },
               { type: 'Divide', value: 'Divide' },
-              { type: 'Number', value: '2' },
+              { type: 'Number', value: '2' }
             ];
 
             expect(this.parser(tokens)).toEqual([

@@ -31,6 +31,10 @@ const Tokens = {
   'Or': 'Or',
   'And': 'And',
   'AndAnd': 'AndAnd',
+  'GreaterThan': 'GreaterThan',
+  'GreaterThanEquals': 'GreaterThanEquals',
+  'LessThan': 'LessThan',
+  'LessThanEquals': 'LessThanEquals',
 
   // Dynamic
   'Identifier': 'Identifier',
