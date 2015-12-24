@@ -181,6 +181,78 @@ describe('Parser', function () {
     });
   });
 
+  describe('array creation', function () {
+    it ('allows the creation of an empty array', function () {
+      const tokens = [
+        { type: 'LeftSquare', value: 'LeftSquare' },
+        { type: 'RightSquare', value: 'RightSquare' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Array',
+          value: []
+        }
+      ]);
+    });
+
+    it ('allows the creation of a one valued array', function () {
+      const tokens = [
+        { type: 'LeftSquare', value: 'LeftSquare' },
+        { type: 'Number', value: '123' },
+        { type: 'RightSquare', value: 'RightSquare' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Array',
+          value: [
+            { type: 'Number', value: '123' }
+          ]
+        }
+      ]);
+    });
+
+    it ('allows the creation of a multiple valued array', function () {
+      const tokens = [
+        { type: 'LeftSquare', value: 'LeftSquare' },
+        { type: 'Number', value: '123' },
+        { type: 'Comma', value: 'Comma' },
+        { type: 'Identifier', value: 'b' },
+        { type: 'RightSquare', value: 'RightSquare' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Array',
+          value: [
+            { type: 'Number', value: '123' },
+            { type: 'Identifier', value: 'b' }
+          ]
+        }
+      ]);
+    });
+
+    it ('returns an error when there is no ] suffix', function () {
+      const tokens = [
+        { type: 'LeftSquare', value: 'LeftSquare' },
+        { type: 'Number', value: '123' }
+      ];
+
+      expect(() => this.parser(tokens)).toThrow(new Error("Unable to parse. Expected token 'RightSquare' instead got 'EOF'"));
+    });
+
+    it ('returns an error when there is no values', function () {
+      const tokens = [
+        { type: 'LeftSquare', value: 'LeftSquare' },
+        { type: 'Comma', value: 'Comma' },
+        { type: 'RightSquare', value: 'RightSquare' }
+      ];
+
+      expect(() => this.parser(tokens)).toThrow(new Error('Not Implemented'));
+    });
+  });
+
   describe('infix operators', function () {
     describe('+', function () {
       it('parses binary addition', function () {

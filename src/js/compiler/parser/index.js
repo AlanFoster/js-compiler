@@ -82,10 +82,11 @@ const createParser = function () {
   const parser = new Parser();
 
   const constantSymbols = [
-    literalSymbol(Tokens.Comma),
-    literalSymbol(Tokens.Semicolon),
-    literalSymbol(Tokens.RightParen),
-    literalSymbol(Tokens.RightBrace)
+    createSymbol(Tokens.Comma),
+    createSymbol(Tokens.Semicolon),
+    createSymbol(Tokens.RightParen),
+    createSymbol(Tokens.RightBrace),
+    createSymbol(Tokens.RightSquare)
   ];
 
   const literalSymbols = [
@@ -111,6 +112,29 @@ const createParser = function () {
         symbolConsumer.advance(Tokens.RightParen);
 
         return expression;
+      })
+    ,
+
+    prefixSymbol(Tokens.LeftSquare)
+      .withNud(function (_token, symbolConsumer) {
+        let values = [];
+
+        debugger
+
+        while (!symbolConsumer.hasTopToken(Tokens.RightSquare)) {
+          values.push(symbolConsumer.expression());
+          if (!symbolConsumer.hasTopToken(Tokens.Comma)) {
+            break;
+          }
+          symbolConsumer.advance(Tokens.Comma);
+        }
+
+        symbolConsumer.advance(Tokens.RightSquare);
+
+        return {
+          type: 'Array',
+          value: values
+        }
       })
     ,
 

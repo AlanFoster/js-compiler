@@ -12,7 +12,7 @@ describe('Interpreter', function () {
   describe('when the tree has an unexpected node', function () {
     it ('should return an error', function() {
       const tree = [
-        { type: 'Unexpected'}
+        { type: 'Unexpected' }
       ];
 
       expect(() => this.interpreter(tree)).toThrow(new Error("Unexpected node type 'Unexpected'"));
@@ -171,6 +171,53 @@ describe('Interpreter', function () {
         ];
 
         expect(this.interpreter(tree)).toEqual(0);
+      });
+    });
+  });
+
+  describe('array creation', function (){
+    it ('supports creating an empty array', function () {
+      it ('returns true', function () {
+        const tree = [
+          {
+            type: 'Array',
+            value: []
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual([]);
+      });
+    });
+
+    it ('supports creating an array with one element', function () {
+      it ('returns true', function () {
+        const tree = [
+          {
+            type: 'Array',
+            value: [
+              { type: 'Number', value: '1' }
+            ]
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual([1]);
+      });
+    });
+
+    it ('supports creating an array with multiple elements', function () {
+      it ('returns true', function () {
+        const tree = [
+          {
+            type: 'Array',
+            value: [
+              { type: 'Number', value: '1' },
+              { type: 'Number', value: '2' },
+              { type: 'Number', value: '3' }
+            ]
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual([1, 2, 3]);
       });
     });
   });

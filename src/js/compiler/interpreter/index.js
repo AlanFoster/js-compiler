@@ -39,6 +39,7 @@ class Interpreter {
       this.visitLiteral,
       this.visitAssignment,
       this.visitTernary,
+      this.visitArray,
       this.error
     ], node);
   }
@@ -74,6 +75,12 @@ class Interpreter {
 
     const branch = this.visitNode(node.condition) ? node.left : node.right;
     return this.visitNode(branch);
+  }
+
+  visitArray(node)  {
+    if (node.type !== 'Array') return;
+
+    return _.map(node.value, (arrayNode) => this.visitNode(arrayNode));
   }
 
   error(node) {
