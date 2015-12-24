@@ -38,6 +38,7 @@ class Interpreter {
       this.visitOperator,
       this.visitLiteral,
       this.visitAssignment,
+      this.visitTernary,
       this.error
     ], node);
   }
@@ -66,6 +67,13 @@ class Interpreter {
     if (!matchedLiteral) return;
 
     return matchedLiteral(node);
+  }
+
+  visitTernary(node) {
+    if (node.type !== 'Ternary') return;
+
+    const branch = this.visitNode(node.condition) ? node.left : node.right;
+    return this.visitNode(branch);
   }
 
   error(node) {

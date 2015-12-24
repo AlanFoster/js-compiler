@@ -143,6 +143,38 @@ describe('Interpreter', function () {
     });
   });
 
+  describe('ternary operator', function () {
+    describe ('when the condition is true', function () {
+      it ('returns the left branch', function () {
+        const tree = [
+          {
+            type: 'Ternary',
+            condition: { type: 'True', value: 'True' },
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(1);
+      });
+    });
+
+    describe ('when the condition is false', function () {
+      it ('returns the right branch', function () {
+        const tree = [
+          {
+            type: 'Ternary',
+            condition: { type: 'False', value: 'False' },
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(0);
+      });
+    });
+  });
+
   describe('predicates', function () {
     describe('True', function () {
       it ('returns true', function () {

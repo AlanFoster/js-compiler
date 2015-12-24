@@ -321,6 +321,27 @@ describe('Parser', function () {
           });
         });
       });
+
+      describe('?', function () {
+        it('parses ternary successfully', function () {
+          const tokens = [
+            { type: 'True', value: 'True' },
+            { type: 'QuestionMark', value: 'QuestionMark' },
+            { type: 'Number', value: '1' },
+            { type: 'Colon', value: 'Colon' },
+            { type: 'Number', value: '0' }
+          ];
+
+          expect(this.parser(tokens)).toEqual([
+            {
+              type: 'Ternary',
+              condition: { type: 'True', value: 'True' },
+              left: { type: 'Number', value: '1' },
+              right: { type: 'Number', value: '0' }
+            }
+          ]);
+        });
+      });
     });
   });
 });

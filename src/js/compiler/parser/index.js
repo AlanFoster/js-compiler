@@ -159,6 +159,22 @@ const createParser = function () {
     infixSymbol(Tokens.Or).withLbp(6).withRbp(6),
     infixSymbol(Tokens.AndAnd).withLbp(5).withRbp(5),
 
+    infixSymbol(Tokens.QuestionMark)
+      .withLbp(3)
+      .withRbp(3)
+      .withLed(function (condition, symbolConsumer) {
+        const left = symbolConsumer.expression();
+        symbolConsumer.advance(Tokens.Colon);
+        const right = symbolConsumer.expression();
+
+        return {
+          type: 'Ternary',
+          condition,
+          left,
+          right
+        };
+      })
+    ,
     infixSymbol(Tokens.Equals).withLbp(3).withRbp(3)
   ];
 
