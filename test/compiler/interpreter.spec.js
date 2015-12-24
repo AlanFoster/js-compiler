@@ -144,6 +144,26 @@ describe('Interpreter', function () {
   });
 
   describe('predicates', function () {
+    describe('True', function () {
+      it ('returns true', function () {
+        const tree = [
+          { type: 'True', value: 'True' }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+    });
+
+    describe('True', function () {
+      it ('returns false', function () {
+        const tree = [
+          { type: 'False', value: 'False' }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+    });
+
     describe ('>', function () {
       it('returns true when LHS is greater than', function () {
         const tree = [

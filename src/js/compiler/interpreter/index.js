@@ -12,6 +12,13 @@ const operators = {
   [Tokens.LessThanEquals]: (a, b) => a <= b
 };
 
+const constants = {
+  [Tokens.Number]: (node) => parseFloat(node.value),
+  [Tokens.String]: (node) => node.value,
+  [Tokens.True]: () => true,
+  [Tokens.False]: () => false
+};
+
 const firstMatchingResult = function ([head, ...tail], ...args) {
   const result = head.call(this, ...args);
   if (typeof result !== 'undefined') return result;
@@ -55,11 +62,10 @@ class Interpreter {
   }
 
   visitLiteral(node) {
-    if (node.type === Tokens.Number) {
-      return parseFloat(node.value);
-    } else if (node.type === Tokens.String) {
-      return node.value;
-    }
+    const matchedLiteral = constants[node.type];
+    if (!matchedLiteral) return;
+
+    return matchedLiteral(node);
   }
 
   error(node) {
