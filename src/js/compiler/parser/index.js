@@ -86,7 +86,8 @@ const createParser = function () {
     createSymbol(Tokens.Semicolon),
     createSymbol(Tokens.RightParen),
     createSymbol(Tokens.RightBrace),
-    createSymbol(Tokens.RightSquare)
+    createSymbol(Tokens.RightSquare),
+    createSymbol(Tokens.Else)
   ];
 
   const literalSymbols = [
@@ -98,13 +99,11 @@ const createParser = function () {
     literalSymbol(Tokens.Colon),
 
     literalSymbol(Tokens.String),
-    literalSymbol(Tokens.Number),
-
-    literalSymbol(Tokens.Else)
+    literalSymbol(Tokens.Number)
   ];
 
   const prefixSymbols = [
-    createSymbol(Tokens.LeftParen)
+    prefixSymbol(Tokens.LeftParen)
       .withLbp(19)
       .withRbp(19)
       .withNud(function(token, symbolConsumer) {
@@ -118,8 +117,6 @@ const createParser = function () {
     prefixSymbol(Tokens.LeftSquare)
       .withNud(function (_token, symbolConsumer) {
         let values = [];
-
-        debugger
 
         while (!symbolConsumer.hasTopToken(Tokens.RightSquare)) {
           values.push(symbolConsumer.expression());
