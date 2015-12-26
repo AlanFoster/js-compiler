@@ -9,9 +9,9 @@ const App = React.createClass({
   getInitialState() {
     return {
       src: (
-        window.location.hash.substring(1) ||
+        decodeURIComponent(window.location.hash.substring(1)) ||
         window.localStorage.src ||
-        '1 + 1'
+        '1 + 1;'
       )
     };
   },
@@ -24,16 +24,18 @@ const App = React.createClass({
 
   render() {
     return (
-      <div>
+      <div className='app'>
         <div>Loaded Modules...</div>
         <div>{Object.keys(this.props.compiler).join(', ')}</div>
 
-        <CodeEditor src={this.state.src} onChange={this.onChange} />
+        <div className='editing'>
+          <CodeEditor src={this.state.src} onChange={this.onChange} />
+          <Interpreter src={this.state.src} compiler={this.props.compiler} />
+        </div>
 
         <div className='stages'>
           <Lexer src={this.state.src} compiler={this.props.compiler} />
           <Parser src={this.state.src} compiler={this.props.compiler} />
-          <Interpreter src={this.state.src} compiler={this.props.compiler} />
         </div>
       </div>
     );

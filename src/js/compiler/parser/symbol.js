@@ -1,7 +1,4 @@
-const notImplemented = () => {
-  throw new Error('Not Implemented')
-};
-const isNotImplemented = (func) => (func === notImplemented);
+import { notImplemented, isNotImplemented } from './not-implemented';
 
 class Symbol {
   constructor(type) {
@@ -10,6 +7,7 @@ class Symbol {
     this.rbp = 0;
     this.lbp = 0;
     this.led = notImplemented;
+    this.std = notImplemented;
   }
 
   withNud(nud) {
@@ -32,6 +30,11 @@ class Symbol {
     return this;
   }
 
+  withStd(std) {
+    this.std = std;
+    return this;
+  }
+
   mergeWith(other) {
     if (!other) return Object.create(this);
 
@@ -43,6 +46,10 @@ class Symbol {
 
     if (isNotImplemented(other.led)) {
       combinedSymbol.led = this.led;
+    }
+
+    if (isNotImplemented(other.std)) {
+      combinedSymbol.std = this.std;
     }
 
     return combinedSymbol;

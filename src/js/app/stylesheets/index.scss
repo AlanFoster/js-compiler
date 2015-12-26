@@ -1,19 +1,30 @@
-.code-editor {
-  textarea {
-    width: 400px;
-    height: 75px;
-    border-radius: 5px;
-    border-color: #CCC;
-    margin: 5px;
+.app {
+  .editing {
+    display: flex;
+
+    .code-editor, .lexer, .parser, .interpreter {
+      width: 50%;
+      overflow: scroll;
+    }
+
+    .code-editor {
+      textarea {
+        width: 90% !important;
+        height: 125px;
+        border-radius: 5px;
+        border-color: #CCC;
+      }
+    }
   }
-}
 
-.stages {
-  display: flex;
 
-  .lexer, .parser, .interpreter {
-    width: 33%;
-    overflow: scroll;
-    padding: 20px;
+  .stages {
+    display: flex;
+
+    .lexer, .parser {
+      width: 50%;
+      overflow: scroll;
+      padding: 20px;
+    }
   }
 }

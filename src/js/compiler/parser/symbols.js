@@ -43,6 +43,10 @@ const infixSymbol = function(type) {
   })
 };
 
+const statementSymbol = function (type) {
+  return createSymbol(type);
+};
+
 const EOFSymbol = function () {
   return createSymbol(Tokens.EOF).withNud(extractValueAndType)
 };
@@ -52,5 +56,6 @@ export {
   literalSymbol,
   prefixSymbol,
   infixSymbol,
+  statementSymbol,
   EOFSymbol
 }

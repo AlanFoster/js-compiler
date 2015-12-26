@@ -25,12 +25,52 @@ const firstMatchingResult = function ([head, ...tail], ...args) {
   return firstMatchingResult.call(this, tail, ...args);
 };
 
-class Interpreter {
-  walk(tree) {
-    const root = tree[0];
-    if (!root) return undefined;
 
-    return this.visitNode(root);
+class DeadEnvironment {
+  static get(identifier) {
+    throw new Error(`Undefined variable '${identifier}'`);
+  }
+}
+
+class Environment {
+  constructor(parent = DeadEnvironment) {
+    this.environment = {};
+    this.parent = parent;
+  }
+
+  add(identifier, value) {
+    this.environment[identifier] = value;
+  }
+
+  get(identifier) {
+    return this.environment[identifier] || this.parent.get(identifier);
+  }
+
+  push() {
+    return new Environment(this);
+  }
+
+  pop() {
+    return this.parent;
+  }
+}
+
+class Interpreter {
+  constructor() {
+    this.environment = new Environment();
+  }
+
+  walk(statements = []) {
+    if (statements.length === 0) return undefined;
+
+    return this.lastStatementOf(statements);
+  }
+
+  lastStatementOf([head, ...tail]) {
+    if (_.isEmpty(tail)) return this.visitNode(head);
+
+    this.visitNode(head);
+    return this.lastStatementOf(tail);
   }
 
   visitNode(node) {
@@ -40,6 +80,8 @@ class Interpreter {
       this.visitAssignment,
       this.visitTernary,
       this.visitArray,
+      this.visitBlock,
+      this.visitIdentifier,
       this.error
     ], node);
   }
@@ -57,10 +99,30 @@ class Interpreter {
     return matchingOperator(this.visitNode(right));
   }
 
+  visitBlock(node) {
+    if (node.type !== 'Block') return;
+
+    this.environment = this.environment.push();
+    const result = this.walk(node.value);
+    this.environment = this.environment.pop();
+    return result;
+  }
+
+  visitIdentifier(node) {
+    if (node.type !== Tokens.Identifier) return;
+
+    return this.environment.get(node.value);
+  }
+
   visitAssignment(node) {
     if (node.type !== Tokens.Equals) return;
-    // TODO Place assignment into a symbol table
-    return this.visitNode(node.right);
+    const value = this.visitNode(node.right);
+    // TODO lhs may be an expression?
+    const identifier = node.left.value;
+
+    this.environment.add(identifier, value);
+
+    return value;
   }
 
   visitLiteral(node) {

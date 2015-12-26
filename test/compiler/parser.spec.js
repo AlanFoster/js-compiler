@@ -16,7 +16,8 @@ describe('Parser', function () {
   describe('number parsing', function () {
     it('parses digits by themselves', function () {
       const tokens = [
-        { type: 'Number', value: '123' }
+        { type: 'Number', value: '123' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -29,7 +30,8 @@ describe('Parser', function () {
     describe('true', function (){
       it('parses True', function () {
         const tokens = [
-          { type: 'True', value: 'True' }
+          { type: 'True', value: 'True' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -41,7 +43,8 @@ describe('Parser', function () {
     describe('false', function (){
       it('parses False', function () {
         const tokens = [
-          { type: 'False', value: 'False' }
+          { type: 'False', value: 'False' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -55,7 +58,8 @@ describe('Parser', function () {
     describe('-', function () {
       it('parses digits by themselves', function () {
         const tokens = [
-          { type: 'Number', value: '123' }
+          { type: 'Number', value: '123' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -66,7 +70,8 @@ describe('Parser', function () {
       it('parses a minus prefix', function () {
         const tokens = [
           { type: 'Minus', value: '-' },
-          { type: 'Number', value: '123' }
+          { type: 'Number', value: '123' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -84,7 +89,8 @@ describe('Parser', function () {
         const tokens = [
           { type: 'Minus', value: '-' },
           { type: 'Minus', value: '-' },
-          { type: 'Number', value: '123' }
+          { type: 'Number', value: '123' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -106,7 +112,8 @@ describe('Parser', function () {
       it('parses a plus prefix', function () {
         const tokens = [
           { type: 'Plus', value: '+' },
-          { type: 'Number', value: '321' }
+          { type: 'Number', value: '321' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -127,7 +134,8 @@ describe('Parser', function () {
       const tokens = [
         { type: 'Identifier', value: 'functionName' },
         { type: 'LeftParen', value: 'LeftParen' },
-        { type: 'RightParen', value: 'RightParen' }
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -144,7 +152,8 @@ describe('Parser', function () {
         { type: 'Identifier', value: 'functionName' },
         { type: 'LeftParen', value: 'LeftParen' },
         { type: 'Number', value: '1' },
-        { type: 'RightParen', value: 'RightParen' }
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -165,7 +174,8 @@ describe('Parser', function () {
         { type: 'Number', value: '1' },
         { type: 'Comma', value: ',' },
         { type: 'Number', value: '2' },
-        { type: 'RightParen', value: 'RightParen' }
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -185,7 +195,8 @@ describe('Parser', function () {
     it ('allows the creation of an empty array', function () {
       const tokens = [
         { type: 'LeftSquare', value: 'LeftSquare' },
-        { type: 'RightSquare', value: 'RightSquare' }
+        { type: 'RightSquare', value: 'RightSquare' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -200,7 +211,8 @@ describe('Parser', function () {
       const tokens = [
         { type: 'LeftSquare', value: 'LeftSquare' },
         { type: 'Number', value: '123' },
-        { type: 'RightSquare', value: 'RightSquare' }
+        { type: 'RightSquare', value: 'RightSquare' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -219,7 +231,8 @@ describe('Parser', function () {
         { type: 'Number', value: '123' },
         { type: 'Comma', value: 'Comma' },
         { type: 'Identifier', value: 'b' },
-        { type: 'RightSquare', value: 'RightSquare' }
+        { type: 'RightSquare', value: 'RightSquare' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -259,7 +272,8 @@ describe('Parser', function () {
         const tokens = [
           { type: 'Number', value: '1' },
           { type: 'Plus', value: 'Plus' },
-          { type: 'Number', value: '2' }
+          { type: 'Number', value: '2' },
+          { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
@@ -276,7 +290,8 @@ describe('Parser', function () {
           const tokens = [
             { type: 'Number', value: '1' },
             { type: 'Minus', value: 'Minus' },
-            { type: 'Number', value: '2' }
+            { type: 'Number', value: '2' },
+            { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
@@ -294,7 +309,8 @@ describe('Parser', function () {
           const tokens = [
             { type: 'Number', value: '1' },
             { type: 'Multiply', value: 'Multiply' },
-            { type: 'Number', value: '2' }
+            { type: 'Number', value: '2' },
+            { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
@@ -312,7 +328,8 @@ describe('Parser', function () {
           const tokens = [
             { type: 'Number', value: '1' },
             { type: 'Divide', value: 'Divide' },
-            { type: 'Identifier', value: 'a' }
+            { type: 'Identifier', value: 'a' },
+            { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
@@ -330,7 +347,8 @@ describe('Parser', function () {
           const tokens = [
             { type: 'Number', value: '0' },
             { type: 'GreaterThan', value: 'GreaterThan' },
-            { type: 'Number', value: '10' }
+            { type: 'Number', value: '10' },
+            { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
@@ -348,7 +366,8 @@ describe('Parser', function () {
           const tokens = [
             { type: 'Identifier', value: 'x' },
             { type: 'Equals', value: 'Equals' },
-            { type: 'Number', value: '10' }
+            { type: 'Number', value: '10' },
+            { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
@@ -367,7 +386,8 @@ describe('Parser', function () {
               { type: 'Plus', value: 'Plus' },
               { type: 'Number', value: '100' },
               { type: 'Divide', value: 'Divide' },
-              { type: 'Number', value: '2' }
+              { type: 'Number', value: '2' },
+              { type: 'Semicolon', value: 'Semicolon' }
             ];
 
             expect(this.parser(tokens)).toEqual([
@@ -401,7 +421,8 @@ describe('Parser', function () {
             { type: 'QuestionMark', value: 'QuestionMark' },
             { type: 'Number', value: '1' },
             { type: 'Colon', value: 'Colon' },
-            { type: 'Number', value: '0' }
+            { type: 'Number', value: '0' },
+            { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
@@ -414,6 +435,26 @@ describe('Parser', function () {
           ]);
         });
       });
+    });
+  });
+
+  describe('blocks', function () {
+    it('parses a block', function () {
+      const tokens = [
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '0' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Block',
+          value: [
+            { type: 'Number', value: '0' }
+          ]
+        }
+      ]);
     });
   });
 });

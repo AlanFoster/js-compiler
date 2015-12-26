@@ -1,10 +1,17 @@
 import Tokens from './../tokens';
 import _ from 'lodash';
 import {
+  notImplemented,
+  isImplemented,
+  isNotImplemented
+} from './not-implemented';
+
+import {
   createSymbol,
   literalSymbol,
   prefixSymbol,
   infixSymbol,
+  statementSymbol,
   EOFSymbol
 } from './symbols';
 
@@ -23,12 +30,9 @@ class Parser {
     this.tokens = [...tokens, { type: Tokens.EOF, value: Tokens.EOF }];
     this.position = 0;
 
-    let parseTree = [];
-    while (!this.hasTopToken(Tokens.EOF)) {
-      parseTree.push(this.expression());
-    }
-
-    return parseTree;
+    const statements = this.statements();
+    this.advance(Tokens.EOF);
+    return statements;
   }
 
   expression(rbp = 0) {
@@ -42,6 +46,34 @@ class Parser {
       left = nextSymbol.led(left, this);
     }
     return left;
+  }
+
+  statement() {
+    const nextSymbol = this.peek();
+    if (isImplemented(nextSymbol.std)) {
+      this.advance();
+      return nextSymbol.std(this);
+    }
+
+    const expression = this.expression();
+    this.advance(Tokens.Semicolon);
+    return expression;
+  }
+
+  statements() {
+    var statements = [];
+    const withinBlock = () => {
+      return !(
+        this.hasTopToken(Tokens.RightBrace) ||
+        this.hasTopToken(Tokens.EOF)
+      )
+    };
+
+    while (withinBlock()) {
+      statements.push(this.statement());
+    }
+
+    return statements;
   }
 
   peek() {
@@ -200,7 +232,15 @@ const createParser = function () {
   ];
 
   const otherSymbols = [
+    statementSymbol(Tokens.LeftBrace).withStd(function (symbolConsumer) {
+      const value = symbolConsumer.statements();
+      symbolConsumer.advance(Tokens.RightBrace);
 
+      return {
+        type: 'Block',
+        value
+      };
+    })
   ];
 
   const symbols = [

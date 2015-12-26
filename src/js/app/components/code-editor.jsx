@@ -14,6 +14,7 @@ const CodeEditor = React.createClass({
   render() {
     return (
       <div className='code-editor'>
+        <h2>Code Editor</h2>
         <textarea onChange={this.onChange} value={this.props.src} />
       </div>
     )
