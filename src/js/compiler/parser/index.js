@@ -168,7 +168,30 @@ const createParser = function () {
     ,
 
     prefixSymbol(Tokens.Minus).withLbp(15).withRbp(15),
-    prefixSymbol(Tokens.Plus).withLbp(15).withRbp(15)
+    prefixSymbol(Tokens.Plus).withLbp(15).withRbp(15),
+
+    prefixSymbol(Tokens.Function)
+      .withNud(function (token, symbolConsumer) {
+        const args = [];
+        let identifier = null;
+        if (symbolConsumer.hasTopToken(Tokens.Identifier)) {
+          identifier = symbolConsumer.peek().value;
+          symbolConsumer.advance();
+        }
+
+        symbolConsumer.advance(Tokens.LeftParen);
+        symbolConsumer.advance(Tokens.RightParen);
+        symbolConsumer.advance(Tokens.LeftBrace);
+        const value = symbolConsumer.statements();
+        symbolConsumer.advance(Tokens.RightBrace);
+
+        return {
+          type: 'Function',
+          identifier,
+          args,
+          value
+        }
+      })
   ];
 
   const infixSymbols = [
@@ -189,7 +212,7 @@ const createParser = function () {
         symbolConsumer.advance(Tokens.RightParen);
 
         return {
-          type: 'application',
+          type: 'Application',
           left,
           args
         }

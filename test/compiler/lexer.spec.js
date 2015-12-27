@@ -91,6 +91,7 @@ describe('Lexer', function () {
       it_lexes('else').toBe('Else');
       it_lexes('true').toBe('True');
       it_lexes('false').toBe('False');
+      it_lexes('function').toBe('Function');
     });
   });
 

@@ -38,5 +38,30 @@ describe('Compiler', function () {
 
       expect(this.compiler(program)).toEqual('Valid');
     });
-  })
+  });
+
+  describe('function calling', function () {
+    it ('handles no argument providing', function () {
+      const program = `
+        function one () { 1; };
+        function two () { one() + 1; };
+
+        one() + two();
+      `;
+
+      expect(this.compiler(program)).toEqual(3);
+    });
+
+    xit ('handles basic argument providing', function () {
+      const program = `
+        function add (x, y) {
+          x + y;
+        };
+
+        add(add(2, 3), 7);
+      `;
+
+      expect(this.compiler(program)).toEqual(12);
+    });
+  });
 });

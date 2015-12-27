@@ -82,6 +82,8 @@ class Interpreter {
       this.visitArray,
       this.visitBlock,
       this.visitIdentifier,
+      this.visitFunction,
+      this.visitApplication,
       this.error
     ], node);
   }
@@ -97,6 +99,25 @@ class Interpreter {
     }
 
     return matchingOperator(this.visitNode(right));
+  }
+
+  visitFunction(node) {
+    if (node.type !== 'Function') return;
+
+    const func = (function () {
+      return this.walk(node.value);
+    }).bind(this);
+
+    this.environment.add(node.identifier, func);
+
+    return func;
+  }
+
+  visitApplication(node) {
+    if (node.type !== 'Application') return;
+
+    const lhs = this.visitNode(node.left);
+    return lhs.call(undefined, node.args);
   }
 
   visitBlock(node) {

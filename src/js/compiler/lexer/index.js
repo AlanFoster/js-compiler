@@ -11,7 +11,8 @@ const keywords = {
   'if': Tokens.If,
   'else': Tokens.Else,
   'true': Tokens.True,
-  'false': Tokens.False
+  'false': Tokens.False,
+  'function': Tokens.Function
 };
 
 const punctuation = {

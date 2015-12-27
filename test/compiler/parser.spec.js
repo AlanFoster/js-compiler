@@ -140,7 +140,7 @@ describe('Parser', function () {
 
       expect(this.parser(tokens)).toEqual([
         {
-          type: 'application',
+          type: 'Application',
           left: { type: 'Identifier', value: 'functionName' },
           args: []
         }
@@ -158,7 +158,7 @@ describe('Parser', function () {
 
       expect(this.parser(tokens)).toEqual([
         {
-          type: 'application',
+          type: 'Application',
           left: { type: 'Identifier', value: 'functionName' },
           args: [
             { type: 'Number', value: '1' }
@@ -180,7 +180,7 @@ describe('Parser', function () {
 
       expect(this.parser(tokens)).toEqual([
         {
-          type: 'application',
+          type: 'Application',
           left: { type: 'Identifier', value: 'functionName' },
           args: [
             { type: 'Number', value: '1' },
@@ -452,6 +452,85 @@ describe('Parser', function () {
           type: 'Block',
           value: [
             { type: 'Number', value: '0' }
+          ]
+        }
+      ]);
+    });
+  });
+
+  describe('functions', function() {
+    it('parses an anonymous function with no arguments', function () {
+      const tokens = [
+        { type: 'Function', value: 'Function' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' },
+        { type: 'Semicolon', value: 'Semicolon' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Function',
+          identifier: null,
+          args: [],
+          value: [
+            { type: 'Number', value: '1' }
+          ]
+        }
+      ]);
+    });
+
+    it('parses a named function with no arguments', function () {
+      const tokens = [
+        { type: 'Function', value: 'Function' },
+        { type: 'Identifier', value: 'One' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' },
+        { type: 'Semicolon', value: 'Semicolon' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Function',
+          identifier: 'One',
+          args: [],
+          value: [
+            { type: 'Number', value: '1' }
+          ]
+        }
+      ]);
+    });
+
+    xit('parses an anonymous function with arguments', function () {
+      const tokens = [
+        { type: 'Function', value: 'Function' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'Identifier', value: 'x' },
+        { type: 'Identifier', value: 'y' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Function',
+          identifier: null,
+          args: [
+            { type: 'Identifier', value: 'x' },
+            { type: 'Identifier', value: 'y' }
+          ],
+          value: [
+            { type: 'Number', value: '1' }
           ]
         }
       ]);
