@@ -104,8 +104,16 @@ class Interpreter {
   visitFunction(node) {
     if (node.type !== 'Function') return;
 
-    const func = (function () {
-      return this.walk(node.value);
+    const func = (function (args) {
+      const newEnvironment = this.environment.push();
+      this.environment = newEnvironment;
+      _.each(_.object(node.args, args), function (value, identifier) {
+        newEnvironment.add(identifier, value);
+      });
+      const value = this.walk(node.value);
+      this.environment = this.environment.pop();
+
+      return value;
     }).bind(this);
 
     this.environment.add(node.identifier, func);
@@ -117,7 +125,8 @@ class Interpreter {
     if (node.type !== 'Application') return;
 
     const lhs = this.visitNode(node.left);
-    return lhs.call(undefined, node.args);
+    const args = _.map(node.args, (node) => this.visitNode(node));
+    return lhs.call(undefined, args);
   }
 
   visitBlock(node) {

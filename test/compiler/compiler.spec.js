@@ -52,16 +52,36 @@ describe('Compiler', function () {
       expect(this.compiler(program)).toEqual(3);
     });
 
-    xit ('handles basic argument providing', function () {
+
+    it ('handles basic function calling', function () {
+      const program = `
+        function identity(x) { x; };
+
+        identity("hello") + ' ' + identity('world');
+      `;
+
+      expect(this.compiler(program)).toEqual('hello world');
+    });
+
+    it ('handles nested function calls', function () {
       const program = `
         function add (x, y) {
           x + y;
         };
 
-        add(add(2, 3), 7);
+        function subtract (x, y) {
+          x - y;
+        };
+
+        function multiply (x,y) {
+          x * y;
+        };
+
+
+        multiply(subtract(add(2, 2), 3), 42);
       `;
 
-      expect(this.compiler(program)).toEqual(12);
+      expect(this.compiler(program)).toEqual(42);
     });
   });
 });

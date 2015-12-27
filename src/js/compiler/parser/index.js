@@ -172,7 +172,6 @@ const createParser = function () {
 
     prefixSymbol(Tokens.Function)
       .withNud(function (token, symbolConsumer) {
-        const args = [];
         let identifier = null;
         if (symbolConsumer.hasTopToken(Tokens.Identifier)) {
           identifier = symbolConsumer.peek().value;
@@ -180,6 +179,22 @@ const createParser = function () {
         }
 
         symbolConsumer.advance(Tokens.LeftParen);
+
+        const args = [];
+        while (!symbolConsumer.hasTopToken(Tokens.RightParen)) {
+          if (!symbolConsumer.hasTopToken(Tokens.Identifier)) {
+            throw new Error('Expected Identifier');
+          }
+
+          args.push(symbolConsumer.peek().value);
+          symbolConsumer.advance(Tokens.Identifier);
+
+          if (!symbolConsumer.hasTopToken(Tokens.Comma)) {
+            break;
+          }
+          symbolConsumer.advance(Tokens.Comma);
+        }
+
         symbolConsumer.advance(Tokens.RightParen);
         symbolConsumer.advance(Tokens.LeftBrace);
         const value = symbolConsumer.statements();
