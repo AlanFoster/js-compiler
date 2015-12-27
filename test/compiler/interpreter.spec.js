@@ -194,6 +194,60 @@ describe('Interpreter', function () {
       expect(this.interpreter(tree)).toEqual(200);
     });
 
+    it ('allows reading false', function () {
+      const tree = [
+        {
+          type: 'Equals',
+          left: {
+            type: 'Identifier',
+            value: 'a'
+          },
+          right: { type: 'False', value: 'False' }
+        },
+        {
+          type: 'Equals',
+          left: {
+            type: 'Identifier',
+            value: 'b'
+          },
+          right: { type: 'False', value: 'False' }
+        },
+        {
+          type: 'Identifier',
+          value: 'b'
+        }
+      ];
+
+      expect(this.interpreter(tree)).toEqual(false);
+    });
+
+    it ('allows reading 0', function () {
+      const tree = [
+        {
+          type: 'Equals',
+          left: {
+            type: 'Identifier',
+            value: 'a'
+          },
+          right: { type: 'Number', value: '0' }
+        },
+        {
+          type: 'Equals',
+          left: {
+            type: 'Identifier',
+            value: 'b'
+          },
+          right: { type: 'Number', value: '0' }
+        },
+        {
+          type: 'Identifier',
+          value: 'b'
+        }
+      ];
+
+      expect(this.interpreter(tree)).toEqual(0);
+    });
+
     it('returns an an error if undefined variables are accessed', function () {
       const tree = [
         { type: 'Identifier', value: 'foo' }

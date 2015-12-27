@@ -25,7 +25,6 @@ const firstMatchingResult = function ([head, ...tail], ...args) {
   return firstMatchingResult.call(this, tail, ...args);
 };
 
-
 class DeadEnvironment {
   static get(identifier) {
     throw new Error(`Undefined variable '${identifier}'`);
@@ -43,7 +42,9 @@ class Environment {
   }
 
   get(identifier) {
-    return this.environment[identifier] || this.parent.get(identifier);
+    const hasIdentifier = _.has(this.environment, identifier);
+    return hasIdentifier ? this.environment[identifier]
+                         : this.parent.get(identifier);
   }
 
   push() {
