@@ -5,5 +5,8 @@ import interpreter from './interpreter';
 export default {
   lexer,
   parser,
-  interpreter
+  interpreter,
+  compile(input) {
+    return interpreter(parser(lexer(input)));
+  }
 };

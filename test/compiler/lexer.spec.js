@@ -21,7 +21,7 @@ describe('Lexer', function () {
     describe('single quotes', function () {
       it('handles correctly closed strings', function () {
         expect(this.lexer("'hello world'")).toEqual([
-          { type: 'String', value: "'hello world'" }
+          { type: 'String', value: 'hello world' }
         ]);
       });
 
@@ -35,7 +35,7 @@ describe('Lexer', function () {
     describe('double quotes', function () {
       it('handles correctly closed strings', function () {
         expect(this.lexer('"hello world"')).toEqual([
-          { type: 'String', value: '"hello world"' }
+          { type: 'String', value: 'hello world' }
         ]);
       });
 
@@ -127,7 +127,7 @@ describe('Lexer', function () {
         { type: 'Var', value: 'var' },
         { type: 'Identifier', value: 'x' },
         { type: 'Equals', value: '=' },
-        { type: 'String', value: "'hello world'" },
+        { type: 'String', value: "hello world" },
         { type: 'Semicolon', value: ';' }
       ]);
     });

@@ -126,13 +126,13 @@ class Lexer {
   scanStringWithOpening(opening) {
     if (this.peek() !== opening) return;
 
-    let value = this.pop() + this.takeWhile(next => next !== opening);
+    this.pop();
+    let value = this.takeWhile(next => next !== opening);
     if (this.peek() !== opening) {
-      return this.error(value);
+      return this.error(opening + value);
     }
 
-    value += this.pop();
-
+    this.pop();
     return { type: Tokens.String, value }
   }
 

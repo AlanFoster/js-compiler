@@ -3,7 +3,7 @@ import attempt from './attempt';
 
 const ParserExample = React.createClass({
   renderOutput(src, compiler) {
-    const result = attempt(() => compiler.interpreter(compiler.parser(compiler.lexer(src))));
+    const result = attempt(() => compiler.compile(src));
 
     return (
       <pre>{JSON.stringify(result, null, 4)}</pre>
