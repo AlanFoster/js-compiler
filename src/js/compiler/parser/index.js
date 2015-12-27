@@ -15,6 +15,8 @@ import {
   EOFSymbol
 } from './symbols';
 
+import { ParseError, UnexpectedTokenError } from './errors';
+
 class Parser {
   constructor() {
     this.symbols = {};
@@ -90,19 +92,23 @@ class Parser {
 
     const matchingSymbol = this.symbols[token.type];
     if (!matchingSymbol) {
-      throw new Error(`Unexpected token type ${token.type}`)
+      throw new ParseError({
+        message: `Unexpected token type ${token.type}`,
+        token: token
+      });
     }
 
     const symbol = Object.create(matchingSymbol);
-    symbol.type = token.type;
-    symbol.value = token.value;
-    return symbol;
+    return _.extend(symbol, token);
   }
 
   advance(expectedToken) {
     if (expectedToken) {
       if (!this.hasTopToken(expectedToken)) {
-        throw new Error(`Unable to parse. Expected token '${expectedToken}' instead got '${_.result(this.peek(), 'type')}'`);
+        throw new UnexpectedTokenError({
+          expected: expectedToken,
+          actual: this.peek()
+        });
       }
     }
 
@@ -183,7 +189,10 @@ const createParser = function () {
         const args = [];
         while (!symbolConsumer.hasTopToken(Tokens.RightParen)) {
           if (!symbolConsumer.hasTopToken(Tokens.Identifier)) {
-            throw new Error('Expected Identifier');
+            throw new UnexpectedTokenError({
+              expected: Tokens.Identifier,
+              actual: symbolConsumer.peek()
+            });
           }
 
           args.push(symbolConsumer.peek().value);

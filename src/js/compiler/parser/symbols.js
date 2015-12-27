@@ -2,16 +2,14 @@ import Symbol from './symbol';
 import Tokens from './../tokens';
 import _ from 'lodash';
 
-const extractValueAndType = function (object) {
-  return _.pick(object, 'type', 'value');
-};
-
 const createSymbol = function (type) {
-    return new Symbol(type);
+  return new Symbol(type);
 };
 
 const literalSymbol = function (type) {
-  return createSymbol(type).withNud(extractValueAndType);
+  return createSymbol(type).withNud(function (symbol) {
+    return _.assign({}, symbol);
+  });
 };
 
 const prefixSymbol = function(type) {
@@ -48,7 +46,7 @@ const statementSymbol = function (type) {
 };
 
 const EOFSymbol = function () {
-  return createSymbol(Tokens.EOF).withNud(extractValueAndType)
+  return createSymbol(Tokens.EOF)
 };
 
 export {

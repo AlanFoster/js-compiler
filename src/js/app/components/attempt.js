@@ -4,6 +4,7 @@ export default function(func) {
   } catch (e) {
     return {
       message: e.message,
+      token: e.token,
       stack: e.stack.split('\n')
     };
   }

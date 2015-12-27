@@ -21,13 +21,13 @@ describe('Lexer', function () {
     describe('single quotes', function () {
       it('handles correctly closed strings', function () {
         expect(this.lexer("'hello world'")).toEqual([
-          { type: 'String', value: 'hello world' }
+          { type: 'String', value: 'hello world', from: 0, to: 13 }
         ]);
       });
 
       it('handles incorrectly closed strings', function () {
         expect(this.lexer("'hello world")).toEqual([
-          { type: 'ERROR', value: "'hello world" }
+          { type: 'ERROR', value: "'hello world", from: 0, to: 12}
         ]);
       });
     });
@@ -35,13 +35,13 @@ describe('Lexer', function () {
     describe('double quotes', function () {
       it('handles correctly closed strings', function () {
         expect(this.lexer('"hello world"')).toEqual([
-          { type: 'String', value: 'hello world' }
+          { type: 'String', value: 'hello world', from: 0, to: 13 }
         ]);
       });
 
       it('handles incorrectly closed strings', function () {
         expect(this.lexer('"hello world')).toEqual([
-          { type: 'ERROR', value: '"hello world' }
+          { type: 'ERROR', value: '"hello world', from: 0, to: 12 }
         ]);
       });
     });
@@ -53,7 +53,7 @@ describe('Lexer', function () {
         toBe(type) {
           it (`lexes ${string} correctly`, function () {
             expect(this.lexer(string)).toEqual([
-              { type, value: string }
+              { type, value: string, from: 0, to: string.length }
             ])
           });
         }
@@ -98,26 +98,26 @@ describe('Lexer', function () {
   describe('numbers', function () {
     it('handles digits', function () {
       expect(this.lexer("1337")).toEqual([
-        { type: 'Number', value: '1337' }
+        { type: 'Number', value: '1337', from: 0, to: 4 }
       ]);
     });
 
     it('handles digits with precision', function () {
       expect(this.lexer("13.37")).toEqual([
-        { type: 'Number', value: '13.37' }
+        { type: 'Number', value: '13.37', from: 0, to: 5 }
       ]);
     });
 
     it('does not consider unary operators', function () {
       expect(this.lexer("-13.37")).toEqual([
-        { type: 'Minus', value: '-' },
-        { type: 'Number', value: '13.37' }
+        { type: 'Minus', value: '-', from: 0, to: 1 },
+        { type: 'Number', value: '13.37', from: 1, to: 6 }
       ]);
     });
 
     it('returns an error token when it could not match successfully', function () {
       expect(this.lexer("13.")).toEqual([
-        { type: 'ERROR', value: '13.' }
+        { type: 'ERROR', value: '13.', from: 0, to: 3 }
       ]);
     });
   });
@@ -125,51 +125,47 @@ describe('Lexer', function () {
   describe('assignment', function () {
     it ('handles string assignment', function () {
       expect(this.lexer("var x = 'hello world';")).toEqual([
-        { type: 'Var', value: 'var' },
-        { type: 'Identifier', value: 'x' },
-        { type: 'Equals', value: '=' },
-        { type: 'String', value: "hello world" },
-        { type: 'Semicolon', value: ';' }
+        { type: 'Var', value: 'var', from: 0, to: 3 },
+        { type: 'Identifier', value: 'x', from: 4, to: 5 },
+        { type: 'Equals', value: '=', from: 6, to: 7 },
+        { type: 'String', value: "hello world", from: 8, to: 21 },
+        { type: 'Semicolon', value: ';', from: 21, to: 22 }
       ]);
     });
 
     it('handles number assignment', function () {
       expect(this.lexer("var x = 1337;")).toEqual([
-        { type: 'Var', value: 'var' },
-        { type: 'Identifier', value: 'x' },
-        { type: 'Equals', value: '=' },
-        { type: 'Number', value: '1337' },
-        { type: 'Semicolon', value: ';' }
+        { type: 'Var', value: 'var', from: 0, to: 3 },
+        { type: 'Identifier', value: 'x', from: 4, to: 5 },
+        { type: 'Equals', value: '=', from: 6, to: 7 },
+        { type: 'Number', value: '1337', from: 8, to: 12 },
+        { type: 'Semicolon', value: ';', from: 12, to: 13 }
       ]);
     });
 
     it('handles multiple assignments', function () {
-      const src = `
-        var x = 1;
-        var y = 2;
-        var z = x + y;
-      `;
+      const src = `var x = 1;\nvar y = 2;\nvar z = x + y;`;
 
       expect(this.lexer(src)).toEqual([
-        { type: 'Var', value: 'var' },
-        { type: 'Identifier', value: 'x' },
-        { type: 'Equals', value: '=' },
-        { type: 'Number', value: '1' },
-        { type: 'Semicolon', value: ';' },
+        { type: 'Var', value: 'var', from: 0, to: 3 },
+        { type: 'Identifier', value: 'x', from: 4, to: 5 },
+        { type: 'Equals', value: '=', from: 6, to: 7 },
+        { type: 'Number', value: '1', from: 8, to: 9 },
+        { type: 'Semicolon', value: ';', from: 9, to: 10 },
 
-        { type: 'Var', value: 'var' },
-        { type: 'Identifier', value: 'y' },
-        { type: 'Equals', value: '=' },
-        { type: 'Number', value: '2' },
-        { type: 'Semicolon', value: ';' },
+        { type: 'Var', value: 'var', from: 11, to: 14 },
+        { type: 'Identifier', value: 'y', from: 15, to: 16 },
+        { type: 'Equals', value: '=', from: 17, to: 18 },
+        { type: 'Number', value: '2', from: 19, to: 20 },
+        { type: 'Semicolon', value: ';', from: 20, to: 21 },
 
-        { type: 'Var', value: 'var' },
-        { type: 'Identifier', value: 'z' },
-        { type: 'Equals', value: '=' },
-        { type: 'Identifier', value: 'x' },
-        { type: 'Plus', value: '+' },
-        { type: 'Identifier', value: 'y' },
-        { type: 'Semicolon', value: ';' }
+        { type: 'Var', value: 'var', from: 22, to: 25 },
+        { type: 'Identifier', value: 'z', from: 26, to: 27 },
+        { type: 'Equals', value: '=', from: 28, to: 29 },
+        { type: 'Identifier', value: 'x', from: 30, to: 31 },
+        { type: 'Plus', value: '+', from: 32, to: 33 },
+        { type: 'Identifier', value: 'y', from: 34, to: 35 },
+        { type: 'Semicolon', value: ';', from: 35, to: 36 }
       ]);
     });
   });
@@ -177,8 +173,8 @@ describe('Lexer', function () {
   describe('error', function () {
     it ('returns an error token when unable to parse the user input', function (){
       expect(this.lexer('var £ = 10;')).toEqual([
-        { type: 'Var', value: 'var' },
-        { type: 'ERROR', value: '£ = 10;' }
+        { type: 'Var', value: 'var', from: 0, to: 3 },
+        { type: 'ERROR', value: '£ = 10;', from: 4, to: 11 }
       ]);
     });
   });
