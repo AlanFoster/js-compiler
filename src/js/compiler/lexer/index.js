@@ -67,40 +67,40 @@ class Lexer {
     this.skipWhitespace();
     if (!this.peek()) return;
 
-    return (
+    const from = this.position;
+    const token = (
       this.scanIdentifier() ||
       this.scanPunctuation() ||
       this.scanNumber() ||
       this.scanString() ||
       this.error()
     );
+
+    return _.extend({}, token, { from, to: this.position });
   }
 
   scanIdentifier() {
     if (!isLetter(this.peek())) return;
 
-    const from = this.position;
     const value = this.takeWhile(next => isLetter(next) || isDigit(next));
     const type = keywords[value] || Tokens.Identifier;
 
-    return { type, value, from, to: this.position };
+    return { type, value };
   }
 
   scanPunctuation() {
     if (!punctuation[this.peek()]) return;
 
-    const from = this.position;
     const next = this.pop();
     const isTwoLengthPunctuation = punctuation[next  + this.peek()];
     const value = isTwoLengthPunctuation ? (next + this.pop()) : next;
 
-    return { type: punctuation[value], value, from, to: this.position};
+    return { type: punctuation[value], value };
   }
 
   scanNumber() {
     if (!isDigit(this.peek())) return;
 
-    const from = this.position;
     let value = this.takeWhile(isDigit);
 
     if (this.peek() === '.') {
@@ -113,7 +113,7 @@ class Lexer {
       value += this.takeWhile(isDigit);
     }
 
-    return { type: Tokens.Number, value, from, to: this.position };
+    return { type: Tokens.Number, value };
   }
 
   scanString() {
@@ -130,7 +130,6 @@ class Lexer {
   scanStringWithOpening(opening) {
     if (this.peek() !== opening) return;
 
-    const from = this.position;
     this.pop();
     let value = this.takeWhile(next => next !== opening);
     if (this.peek() !== opening) {
@@ -138,17 +137,13 @@ class Lexer {
     }
 
     this.pop();
-    return { type: Tokens.String, value, from, to: this.position }
+    return { type: Tokens.String, value }
   }
 
   error(currentBuffer = '') {
-    const from = (this.position - currentBuffer.length);
-
     return {
       type: Tokens.ERROR,
       value: currentBuffer + this.takeWhile(_ => true),
-      from,
-      to: this.position
     }
   }
 
