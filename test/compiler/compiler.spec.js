@@ -83,5 +83,17 @@ describe('Compiler', function () {
 
       expect(this.compiler(program)).toEqual(42);
     });
+
+    it ('supports currying', function () {
+      const program = `
+        function add(x) { function(y) { x + y; }; };
+        add5 = add(5);
+        add12 = add(12);
+
+        add(add12(add5(2)))(3);
+      `;
+
+      expect(this.compiler(program)).toEqual(22);
+    });
   });
 });

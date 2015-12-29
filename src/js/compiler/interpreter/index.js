@@ -47,7 +47,7 @@ class Environment {
                          : this.parent.get(identifier);
   }
 
-  push() {
+  create() {
     return new Environment(this);
   }
 
@@ -57,24 +57,20 @@ class Environment {
 }
 
 class Interpreter {
-  constructor() {
-    this.environment = new Environment();
-  }
-
-  walk(statements = []) {
+  walk(statements = [], environment) {
     if (statements.length === 0) return undefined;
 
-    return this.lastStatementOf(statements);
+    return this.lastStatementOf(statements, environment);
   }
 
-  lastStatementOf([head, ...tail]) {
-    if (_.isEmpty(tail)) return this.visitNode(head);
+  lastStatementOf([head, ...tail], environment) {
+    if (_.isEmpty(tail)) return this.visitNode(head, environment);
 
-    this.visitNode(head);
-    return this.lastStatementOf(tail);
+    this.visitNode(head, environment);
+    return this.lastStatementOf(tail, environment);
   }
 
-  visitNode(node) {
+  visitNode(node, environment) {
     return firstMatchingResult.call(this, [
       this.visitOperator,
       this.visitLiteral,
@@ -86,102 +82,100 @@ class Interpreter {
       this.visitFunction,
       this.visitApplication,
       this.error
-    ], node);
+    ], node, environment);
   }
 
-  visitOperator(node) {
+  visitOperator(node, environment) {
     const matchingOperator = operators[node.type];
     if (!matchingOperator) return;
 
     const { left, right } = node;
 
     if (left) {
-      return matchingOperator(this.visitNode(left), this.visitNode(right))
+      return matchingOperator(this.visitNode(left, environment), this.visitNode(right, environment))
     }
 
-    return matchingOperator(this.visitNode(right));
+    return matchingOperator(this.visitNode(right, environment));
   }
 
-  visitFunction(node) {
+  visitFunction(node, environment) {
     if (node.type !== 'Function') return;
 
     const func = (function (args) {
-      const newEnvironment = this.environment.push();
-      this.environment = newEnvironment;
-      _.each(_.object(node.args, args), function (value, identifier) {
-        newEnvironment.add(identifier, value);
+      const newEnvironment = environment.create();
+      _.each(node.args, function (identifier, index) {
+        newEnvironment.add(identifier, args[index] || null);
       });
-      const value = this.walk(node.value);
-      this.environment = this.environment.pop();
+
+      const value = this.walk(node.value, newEnvironment);
 
       return value;
     }).bind(this);
 
-    this.environment.add(node.identifier, func);
+    environment.add(node.identifier, func);
 
     return func;
   }
 
-  visitApplication(node) {
+  visitApplication(node, environment) {
     if (node.type !== 'Application') return;
 
-    const lhs = this.visitNode(node.left);
-    const args = _.map(node.args, (node) => this.visitNode(node));
+    const lhs = this.visitNode(node.left, environment);
+    const args = _.map(node.args, (node) => this.visitNode(node, environment));
     return lhs.call(undefined, args);
   }
 
-  visitBlock(node) {
+  visitBlock(node, environment) {
     if (node.type !== 'Block') return;
 
-    this.environment = this.environment.push();
-    const result = this.walk(node.value);
-    this.environment = this.environment.pop();
+    const newEnvironment = environment.create();
+    const result = this.walk(node.value, newEnvironment);
     return result;
   }
 
-  visitIdentifier(node) {
+  visitIdentifier(node, environment) {
     if (node.type !== Tokens.Identifier) return;
 
-    return this.environment.get(node.value);
+    return environment.get(node.value);
   }
 
-  visitAssignment(node) {
+  visitAssignment(node, environment) {
     if (node.type !== Tokens.Equals) return;
-    const value = this.visitNode(node.right);
+    const value = this.visitNode(node.right, environment);
     // TODO lhs may be an expression?
     const identifier = node.left.value;
 
-    this.environment.add(identifier, value);
+    environment.add(identifier, value);
 
     return value;
   }
 
-  visitLiteral(node) {
+  visitLiteral(node, environment) {
     const matchedLiteral = constants[node.type];
     if (!matchedLiteral) return;
 
     return matchedLiteral(node);
   }
 
-  visitTernary(node) {
+  visitTernary(node, environment) {
     if (node.type !== 'Ternary') return;
 
-    const branch = this.visitNode(node.condition) ? node.left : node.right;
-    return this.visitNode(branch);
+    const branch = this.visitNode(node.condition, environment) ? node.left : node.right;
+    return this.visitNode(branch, environment);
   }
 
-  visitArray(node)  {
+  visitArray(node, environment)  {
     if (node.type !== 'Array') return;
 
-    return _.map(node.value, (arrayNode) => this.visitNode(arrayNode));
+    return _.map(node.value, (arrayNode) => this.visitNode(arrayNode, environment));
   }
 
-  error(node) {
+  error(node, environment) {
     throw new Error(`Unexpected node type '${node.type}'`);
   }
 }
 
 
 export default function (tree) {
-  return new Interpreter().walk(tree)
+  return new Interpreter().walk(tree, new Environment())
 };

@@ -12,7 +12,7 @@ const ParserExample = React.createClass({
   },
 
   textForResult(src, result) {
-    if (!(result.token && result.token.from)) return JSON.stringify(result, null, 4);
+    if (!(result && result.token && result.token.from)) return JSON.stringify(result, null, 4);
 
     const { from, to } = result.token;
 
@@ -23,17 +23,18 @@ const ParserExample = React.createClass({
       acc.count += nextLine.length + 1;
       acc.lines.push(nextLine);
 
-      if (isErrorBetweenLine) {
+      if (isErrorBetweenLine && ! acc.hasReportedError) {
         const leftPadding = _.repeat(' ', errorDistance);
         const errorLength = to - from;
         const errorRange = _.repeat('*', errorLength);
 
         acc.lines.push(leftPadding + errorRange);
         acc.lines.push(leftPadding + '^ ' + result.message);
+        acc.hasReportedError = true;
       }
 
       return acc;
-    }, { lines: [], count: 0});
+    }, { lines: [], count: 0, hasReportedError: false });
 
     return linesWithErrorAcc.lines.join('\n');
   },
