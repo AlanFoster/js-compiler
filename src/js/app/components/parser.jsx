@@ -13,8 +13,7 @@ const ParserExample = React.createClass({
     const { src, compiler } = this.props;
 
     return (
-      <div className='parser'>
-        <h2>Parser</h2>
+      <div>
         <div>{this.renderOutput(src, compiler)}</div>
       </div>
     );

@@ -14,7 +14,6 @@ const LexerExample = React.createClass({
 
     return (
       <div className='lexer'>
-        <h2>Lexer</h2>
         <div>{this.renderOutput(src, compiler)}</div>
       </div>
     );

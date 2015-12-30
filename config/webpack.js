@@ -10,7 +10,7 @@ module.exports = {
         loader: 'babel'
       },
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         loaders: ['style', 'css', 'sass?config=otherSassLoaderConfig']
       }
     ]

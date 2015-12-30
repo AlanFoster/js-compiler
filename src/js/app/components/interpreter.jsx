@@ -44,7 +44,6 @@ const ParserExample = React.createClass({
 
     return (
       <div className='interpreter'>
-        <h2>Result</h2>
         <pre>{this.renderOutput(src, compiler)}</pre>
       </div>
     );
