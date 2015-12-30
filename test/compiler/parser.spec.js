@@ -445,17 +445,19 @@ describe('Parser', function () {
       ]);
     });
 
-    xit('parses an anonymous function with arguments', function () {
+    it('parses an anonyous function with arguments', function () {
       const tokens = [
         { type: 'Function', value: 'Function' },
         { type: 'LeftParen', value: 'LeftParen' },
         { type: 'Identifier', value: 'x' },
+        { type: 'Comma', value: 'Comma' },
         { type: 'Identifier', value: 'y' },
         { type: 'RightParen', value: 'RightParen' },
         { type: 'LeftBrace', value: 'LeftBrace' },
         { type: 'Number', value: '1' },
         { type: 'Semicolon', value: 'Semicolon' },
-        { type: 'RightBrace', value: 'RightBrace' }
+        { type: 'RightBrace', value: 'RightBrace' },
+        { type: 'Semicolon', value: 'Semicolon' }
       ];
 
       expect(this.parser(tokens)).toEqual([
@@ -463,8 +465,39 @@ describe('Parser', function () {
           type: 'Function',
           identifier: null,
           args: [
-            { type: 'Identifier', value: 'x' },
-            { type: 'Identifier', value: 'y' }
+            'x',
+            'y'
+          ],
+          value: [
+            { type: 'Number', value: '1' }
+          ]
+        }
+      ]);
+    });
+
+    it('parses a named function with arguments', function () {
+      const tokens = [
+        { type: 'Function', value: 'Function' },
+        { type: 'Identifier', value: 'foo' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'Identifier', value: 'x' },
+        { type: 'Comma', value: 'Comma' },
+        { type: 'Identifier', value: 'y' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' },
+        { type: 'Semicolon', value: 'Semicolon' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Function',
+          identifier: 'foo',
+          args: [
+            'x',
+            'y'
           ],
           value: [
             { type: 'Number', value: '1' }
