@@ -77,7 +77,7 @@ class Interpreter {
       this.visitOperator,
       this.visitLiteral,
       this.visitAssignment,
-      this.visitTernary,
+      this.visitIf,
       this.visitArray,
       this.visitBlock,
       this.visitIdentifier,
@@ -159,8 +159,8 @@ class Interpreter {
     return matchedLiteral(node);
   }
 
-  visitTernary(node, environment) {
-    if (node.type !== 'Ternary') return;
+  visitIf(node, environment) {
+    if (node.type !== 'If') return;
 
     const branch = this.visitNode(node.condition, environment) ? node.left : node.right;
     return this.visitNode(branch, environment);

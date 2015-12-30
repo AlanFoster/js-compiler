@@ -343,12 +343,12 @@ describe('Interpreter', function () {
     });
   });
 
-  describe('ternary operator', function () {
+  describe('If', function () {
     describe ('when the condition is true', function () {
       it ('returns the left branch', function () {
         const tree = [
           {
-            type: 'Ternary',
+            type: 'If',
             condition: { type: 'True', value: 'True' },
             left: { type: 'Number', value: '1' },
             right: { type: 'Number', value: '0' }
@@ -363,7 +363,7 @@ describe('Interpreter', function () {
       it ('returns the right branch', function () {
         const tree = [
           {
-            type: 'Ternary',
+            type: 'If',
             condition: { type: 'False', value: 'False' },
             left: { type: 'Number', value: '1' },
             right: { type: 'Number', value: '0' }

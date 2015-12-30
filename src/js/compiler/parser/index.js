@@ -270,7 +270,7 @@ const createParser = function () {
         const right = symbolConsumer.expression();
 
         return {
-          type: 'Ternary',
+          type: 'If',
           condition,
           left,
           right

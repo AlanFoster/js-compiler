@@ -365,7 +365,7 @@ describe('Parser', function () {
 
         expect(this.parser(tokens)).toEqual([
           {
-            type: 'Ternary',
+            type: 'If',
             condition: { type: 'True', value: 'True' },
             left: { type: 'Number', value: '1' },
             right: { type: 'Number', value: '0' }
