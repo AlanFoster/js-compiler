@@ -267,173 +267,110 @@ describe('Parser', function () {
   });
 
   describe('infix operators', function () {
-    describe('+', function () {
-      it('parses binary addition', function () {
+    describe('binary operators', function () {
+      const it_parses_infix_binary_operator = function (operator) {
+        it(`parses binary operator ${operator} correctly`, function () {
+          const tokens = [
+            { type: 'Number', value: '1' },
+            { type: operator, value: operator },
+            { type: 'Number', value: '2' },
+            { type: 'Semicolon', value: 'Semicolon' }
+          ];
+
+          expect(this.parser(tokens)).toEqual([
+            {
+              type: operator,
+              left: { type: 'Number', value: '1' },
+              right: { type: 'Number', value: '2' }
+            }
+          ]);
+        });
+      };
+
+      it_parses_infix_binary_operator('Plus');
+      it_parses_infix_binary_operator('Minus');
+      it_parses_infix_binary_operator('Multiply');
+      it_parses_infix_binary_operator('Divide');
+      it_parses_infix_binary_operator('NotEquals');
+      it_parses_infix_binary_operator('EqualsEquals');
+      it_parses_infix_binary_operator('GreaterThan');
+      it_parses_infix_binary_operator('GreaterThanEquals');
+      it_parses_infix_binary_operator('LessThan');
+      it_parses_infix_binary_operator('LessThanEquals');
+    });
+
+    describe('=', function () {
+      it('allows assignment', function () {
         const tokens = [
-          { type: 'Number', value: '1' },
-          { type: 'Plus', value: 'Plus' },
-          { type: 'Number', value: '2' },
+          { type: 'Identifier', value: 'x' },
+          { type: 'Equals', value: 'Equals' },
+          { type: 'Number', value: '10' },
           { type: 'Semicolon', value: 'Semicolon' }
         ];
 
         expect(this.parser(tokens)).toEqual([
           {
-            type: 'Plus',
-            left: { type: 'Number', value: '1' },
-            right: { type: 'Number', value: '2' }
+            type: 'Equals',
+            left: { type: 'Identifier', value: 'x' },
+            right: { type: 'Number', value: '10' }
           }
         ]);
       });
 
-      describe('-', function () {
-        it('parses binary subtraction', function () {
-          const tokens = [
-            { type: 'Number', value: '1' },
-            { type: 'Minus', value: 'Minus' },
-            { type: 'Number', value: '2' },
-            { type: 'Semicolon', value: 'Semicolon' }
-          ];
-
-          expect(this.parser(tokens)).toEqual([
-            {
-              type: 'Minus',
-              left: { type: 'Number', value: '1' },
-              right: { type: 'Number', value: '2' }
-            }
-          ]);
-        });
-      });
-
-      describe('*', function () {
-        it('parses binary multiplication', function () {
-          const tokens = [
-            { type: 'Number', value: '1' },
-            { type: 'Multiply', value: 'Multiply' },
-            { type: 'Number', value: '2' },
-            { type: 'Semicolon', value: 'Semicolon' }
-          ];
-
-          expect(this.parser(tokens)).toEqual([
-            {
-              type: 'Multiply',
-              left: { type: 'Number', value: '1' },
-              right: { type: 'Number', value: '2' }
-            }
-          ]);
-        });
-      });
-
-      describe('/', function () {
-        it('parses binary division', function () {
-          const tokens = [
-            { type: 'Number', value: '1' },
-            { type: 'Divide', value: 'Divide' },
-            { type: 'Identifier', value: 'a' },
-            { type: 'Semicolon', value: 'Semicolon' }
-          ];
-
-          expect(this.parser(tokens)).toEqual([
-            {
-              type: 'Divide',
-              left: { type: 'Number', value: '1' },
-              right: { type: 'Identifier', value: 'a' }
-            }
-          ]);
-        });
-      });
-
-      describe('>', function () {
-        it('parses binary division', function () {
-          const tokens = [
-            { type: 'Number', value: '0' },
-            { type: 'GreaterThan', value: 'GreaterThan' },
-            { type: 'Number', value: '10' },
-            { type: 'Semicolon', value: 'Semicolon' }
-          ];
-
-          expect(this.parser(tokens)).toEqual([
-            {
-              type: 'GreaterThan',
-              left: { type: 'Number', value: '0' },
-              right: { type: 'Number', value: '10' }
-            }
-          ]);
-        });
-      });
-
-      describe('=', function () {
+      describe('precedence for 100 + 100 / 2', function () {
         it('allows assignment', function () {
           const tokens = [
-            { type: 'Identifier', value: 'x' },
-            { type: 'Equals', value: 'Equals' },
-            { type: 'Number', value: '10' },
+            { type: 'Number', value: '100' },
+            { type: 'Plus', value: 'Plus' },
+            { type: 'Number', value: '100' },
+            { type: 'Divide', value: 'Divide' },
+            { type: 'Number', value: '2' },
             { type: 'Semicolon', value: 'Semicolon' }
           ];
 
           expect(this.parser(tokens)).toEqual([
             {
-              type: 'Equals',
-              left: { type: 'Identifier', value: 'x' },
-              right: { type: 'Number', value: '10' }
-            }
-          ]);
-        });
-
-        describe('precedence for 100 + 100 / 2', function () {
-          it('allows assignment', function () {
-            const tokens = [
-              { type: 'Number', value: '100' },
-              { type: 'Plus', value: 'Plus' },
-              { type: 'Number', value: '100' },
-              { type: 'Divide', value: 'Divide' },
-              { type: 'Number', value: '2' },
-              { type: 'Semicolon', value: 'Semicolon' }
-            ];
-
-            expect(this.parser(tokens)).toEqual([
-              {
-                "type": "Plus",
+              "type": "Plus",
+              "left": {
+                "type": "Number",
+                "value": "100"
+              },
+              "right": {
+                "type": "Divide",
                 "left": {
                   "type": "Number",
                   "value": "100"
                 },
                 "right": {
-                  "type": "Divide",
-                  "left": {
-                    "type": "Number",
-                    "value": "100"
-                  },
-                  "right": {
-                    "type": "Number",
-                    "value": "2"
-                  }
+                  "type": "Number",
+                  "value": "2"
                 }
               }
-            ]);
-          });
-        });
-      });
-
-      describe('?', function () {
-        it('parses ternary successfully', function () {
-          const tokens = [
-            { type: 'True', value: 'True' },
-            { type: 'QuestionMark', value: 'QuestionMark' },
-            { type: 'Number', value: '1' },
-            { type: 'Colon', value: 'Colon' },
-            { type: 'Number', value: '0' },
-            { type: 'Semicolon', value: 'Semicolon' }
-          ];
-
-          expect(this.parser(tokens)).toEqual([
-            {
-              type: 'Ternary',
-              condition: { type: 'True', value: 'True' },
-              left: { type: 'Number', value: '1' },
-              right: { type: 'Number', value: '0' }
             }
           ]);
         });
+      });
+    });
+
+    describe('?', function () {
+      it('parses ternary successfully', function () {
+        const tokens = [
+          { type: 'True', value: 'True' },
+          { type: 'QuestionMark', value: 'QuestionMark' },
+          { type: 'Number', value: '1' },
+          { type: 'Colon', value: 'Colon' },
+          { type: 'Number', value: '0' },
+          { type: 'Semicolon', value: 'Semicolon' }
+        ];
+
+        expect(this.parser(tokens)).toEqual([
+          {
+            type: 'Ternary',
+            condition: { type: 'True', value: 'True' },
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '0' }
+          }
+        ]);
       });
     });
   });

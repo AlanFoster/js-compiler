@@ -594,5 +594,81 @@ describe('Interpreter', function () {
         expect(this.interpreter(tree)).toEqual(true);
       });
     });
+
+    describe ('==', function () {
+      it('returns true when equal', function () {
+        const tree = [
+          {
+            type: 'EqualsEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+
+      it('returns false when not equal', function () {
+        const tree = [
+          {
+            type: 'EqualsEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '2' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+
+      it('returns does not perform tye coercion', function () {
+        const tree = [
+          {
+            type: 'EqualsEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'String', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+    });
+
+    describe ('==', function () {
+      it('returns false when equal', function () {
+        const tree = [
+          {
+            type: 'NotEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(false);
+      });
+
+      it('returns true when not equal', function () {
+        const tree = [
+          {
+            type: 'NotEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'Number', value: '2' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+
+      it('returns does not perform tye coercion', function () {
+        const tree = [
+          {
+            type: 'NotEquals',
+            left: { type: 'Number', value: '1' },
+            right: { type: 'String', value: '1' }
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(true);
+      });
+    });
   });
 });

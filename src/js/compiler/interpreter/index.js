@@ -6,6 +6,8 @@ const operators = {
   [Tokens.Minus]: (a, b) => (typeof b === 'undefined') ? -a : a - b,
   [Tokens.Multiply]: (a, b) => a * b,
   [Tokens.Divide]: (a, b) => a / b,
+  [Tokens.NotEquals]: (a, b) => a !== b,
+  [Tokens.EqualsEquals]: (a, b) => a === b,
   [Tokens.GreaterThan]: (a, b) => a > b,
   [Tokens.GreaterThanEquals]: (a, b) => a >= b,
   [Tokens.LessThan]: (a, b) => a < b,

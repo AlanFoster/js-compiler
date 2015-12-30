@@ -78,6 +78,7 @@ describe('Lexer', function () {
       it_lexes('[').toBe('LeftSquare');
       it_lexes(']').toBe('RightSquare');
       it_lexes('=').toBe('Equals');
+      it_lexes('!=').toBe('NotEquals');
       it_lexes('==').toBe('EqualsEquals');
       it_lexes('|').toBe('Pipe');
       it_lexes('||').toBe('Or');

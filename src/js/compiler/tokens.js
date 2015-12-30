@@ -27,6 +27,7 @@ const Tokens = {
   'LeftSquare': 'LeftSquare',
   'RightSquare': 'RightSquare',
   'Equals': 'Equals',
+  'NotEquals': 'NotEquals',
   'EqualsEquals': 'EqualsEquals',
   'Pipe': 'Pipe',
   'Or': 'Or',

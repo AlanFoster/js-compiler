@@ -33,6 +33,7 @@ const punctuation = {
   '[': Tokens.LeftSquare,
   ']': Tokens.RightSquare,
   '=': Tokens.Equals,
+  '!=': Tokens.NotEquals,
   '==': Tokens.EqualsEquals,
   '|': Tokens.Pipe,
   '||': Tokens.Or,
