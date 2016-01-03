@@ -12,6 +12,7 @@ const keywords = {
   'else': Tokens.Else,
   'true': Tokens.True,
   'false': Tokens.False,
+  'while': Tokens.While,
   'function': Tokens.Function
 };
 

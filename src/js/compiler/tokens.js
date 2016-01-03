@@ -7,6 +7,7 @@ const Tokens = {
   'Else': 'Else',
   'True': 'True',
   'False': 'False',
+  'While': 'While',
   'Function': 'Function',
 
   // Punctuation
