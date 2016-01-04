@@ -20,8 +20,8 @@ describe('Compiler', function () {
   describe('basic programs', function () {
     it ('handles assignments and access', function () {
       const program = `
-        x = 11;
-        y = (1 + 1);
+        var x = 11;
+        var y = (1 + 1);
 
         x * y * 2 - 2;
       `;
@@ -31,7 +31,7 @@ describe('Compiler', function () {
 
     it ('ternary', function () {
       const program = `
-        age = 18;
+        var age = 18;
 
         (age >= 18) ? 'Valid' : 'Invalid';
       `;
@@ -87,8 +87,8 @@ describe('Compiler', function () {
     it ('supports currying', function () {
       const program = `
         function add(x) { function(y) { x + y; }; };
-        add5 = add(5);
-        add12 = add(12);
+        var add5 = add(5);
+        var add12 = add(12);
 
         add(add12(add5(2)))(3);
       `;

@@ -289,6 +289,19 @@ const createParser = function () {
         type: 'Block',
         value
       };
+    }),
+    statementSymbol(Tokens.Var).withStd(function (symbolConsumer) {
+      const left = _.extend({}, symbolConsumer.peek());
+      symbolConsumer.advance(Tokens.Identifier);
+      symbolConsumer.advance(Tokens.Equals);
+      const right = symbolConsumer.expression();
+      symbolConsumer.advance(Tokens.Semicolon);
+
+      return {
+        type: 'Initialization',
+        left,
+        right
+      };
     })
   ];
 

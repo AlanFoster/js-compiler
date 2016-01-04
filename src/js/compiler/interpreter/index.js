@@ -31,6 +31,10 @@ class DeadEnvironment {
   static get(identifier) {
     throw new Error(`Undefined variable '${identifier}'`);
   }
+
+  static update(identifier, value) {
+    throw new Error(`Undefined variable '${identifier}'`);
+  }
 }
 
 class Environment {
@@ -41,6 +45,13 @@ class Environment {
 
   add(identifier, value) {
     this.environment[identifier] = value;
+  }
+
+  update(identifier, value) {
+    const hasIdentifier = _.has(this.environment, identifier);
+    if (!hasIdentifier) return this.parent.update(identifier, value);
+
+    this.add(identifier, value);
   }
 
   get(identifier) {
@@ -76,6 +87,7 @@ class Interpreter {
     return firstMatchingResult.call(this, [
       this.visitOperator,
       this.visitLiteral,
+      this.visitInitialization,
       this.visitAssignment,
       this.visitIf,
       this.visitArray,
@@ -141,13 +153,22 @@ class Interpreter {
     return environment.get(node.value);
   }
 
-  visitAssignment(node, environment) {
-    if (node.type !== Tokens.Equals) return;
+  visitInitialization(node, environment) {
+    if (node.type !== 'Initialization') return;
     const value = this.visitNode(node.right, environment);
-    // TODO lhs may be an expression?
     const identifier = node.left.value;
 
     environment.add(identifier, value);
+
+    return value;
+  }
+
+  visitAssignment(node, environment) {
+    if (node.type !== Tokens.Equals) return;
+    const value = this.visitNode(node.right, environment);
+    const identifier = node.left.value;
+
+    environment.update(identifier, value);
 
     return value;
   }

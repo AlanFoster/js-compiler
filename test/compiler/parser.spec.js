@@ -191,6 +191,36 @@ describe('Parser', function () {
     });
   });
 
+  describe('variable creation', function () {
+    it ('allows a single expression to be assigned', function () {
+      const tokens = [
+        { type: 'Var', value: 'Var' },
+        { type: 'Identifier', value: 'foo' },
+        { type: 'Equals', value: 'Equals' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'Initialization',
+          left: { type: 'Identifier', value: 'foo' },
+          right: { type: 'Number', value: '1' }
+        }
+      ]);
+    });
+
+    it ('requires an initial value', function () {
+      const tokens = [
+        { type: 'Var', value: 'Var' },
+        { type: 'Identifier', value: 'foo' },
+        { type: 'Semicolon', value: 'Semicolon' }
+      ];
+
+      expect(() => this.parser(tokens)).toThrowError("Unable to parse. Expected token 'Equals' instead got 'Semicolon'");
+    });
+  });
+
   describe('array creation', function () {
     it ('allows the creation of an empty array', function () {
       const tokens = [
@@ -252,7 +282,7 @@ describe('Parser', function () {
         { type: 'Number', value: '123' }
       ];
 
-      expect(() => this.parser(tokens)).toThrow(new Error("Unable to parse. Expected token 'RightSquare' instead got 'EOF'"));
+      expect(() => this.parser(tokens)).toThrowError("Unable to parse. Expected token 'RightSquare' instead got 'EOF'");
     });
 
     it ('returns an error when there is no values', function () {
@@ -262,7 +292,7 @@ describe('Parser', function () {
         { type: 'RightSquare', value: 'RightSquare' }
       ];
 
-      expect(() => this.parser(tokens)).toThrow(new Error('Not Implemented'));
+      expect(() => this.parser(tokens)).toThrowError('Not Implemented');
     });
   });
 

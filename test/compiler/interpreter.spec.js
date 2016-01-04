@@ -124,128 +124,114 @@ describe('Interpreter', function () {
     });
   });
 
-  describe('assignment', function () {
-    it ('assignment returns its value', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
-          },
-          right: { type: 'Number', value: '100' }
-        }
-      ];
+  describe('initialization and assignment', function () {
+    describe('initialization', function () {
+     it ('returns its value', function () {
+       const tree = [
+         {
+           type: 'Initialization',
+           left: { type: 'Identifier', value: 'a' },
+           right: { type: 'Number', value: '100' }
+           }
+         ];
 
-      expect(this.interpreter(tree)).toEqual(100);
+        expect(this.interpreter(tree)).toEqual(100);
+      });
     });
 
-    it ('allows reading the "a" variable later', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+    describe('re-assignment', function () {
+      it ('returns its value', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '100' }
           },
-          right: { type: 'Number', value: '100' }
-        },
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'b'
-          },
-          right: { type: 'Number', value: '200' }
-        },
-        {
-          'type': 'Identifier',
-          'value': 'a'
-        }
-      ];
+          {
+            type: 'Equals',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '33' }
+          }
+        ];
 
-      expect(this.interpreter(tree)).toEqual(100);
+        expect(this.interpreter(tree)).toEqual(33);
+      });
     });
 
-    it ('allows reading the "b" variable later', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+    describe('reading values', function () {
+      it ('allows reading the "a" variable later', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '100' }
           },
-          right: { type: 'Number', value: '100' }
-        },
-        {
-          type: 'Equals',
-          left: {
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'b' },
+            right: { type: 'Number', value: '200' }
+          },
+          {
+            'type': 'Identifier',
+            'value': 'a'
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(100);
+      });
+
+      it ('allows reading the "b" variable later', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '100' }
+          },
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'b' },
+            right: { type: 'Number', value: '200' }
+          },
+          {
             type: 'Identifier',
             value: 'b'
-          },
-          right: { type: 'Number', value: '200' }
-        },
-        {
-          type: 'Identifier',
-          value: 'b'
-        }
-      ];
+          }
+        ];
 
-      expect(this.interpreter(tree)).toEqual(200);
-    });
+        expect(this.interpreter(tree)).toEqual(200);
+      });
 
-    it ('allows reading false', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+      it ('allows reading false', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'b' },
+            right: { type: 'False', value: 'False' }
           },
-          right: { type: 'False', value: 'False' }
-        },
-        {
-          type: 'Equals',
-          left: {
+          {
             type: 'Identifier',
             value: 'b'
-          },
-          right: { type: 'False', value: 'False' }
-        },
-        {
-          type: 'Identifier',
-          value: 'b'
-        }
-      ];
+          }
+        ];
 
-      expect(this.interpreter(tree)).toEqual(false);
-    });
+        expect(this.interpreter(tree)).toEqual(false);
+      });
 
-    it ('allows reading 0', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+      it ('allows reading 0', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'b' },
+            right: { type: 'Number', value: '0' }
           },
-          right: { type: 'Number', value: '0' }
-        },
-        {
-          type: 'Equals',
-          left: {
+          {
             type: 'Identifier',
             value: 'b'
-          },
-          right: { type: 'Number', value: '0' }
-        },
-        {
-          type: 'Identifier',
-          value: 'b'
-        }
-      ];
+          }
+        ];
 
-      expect(this.interpreter(tree)).toEqual(0);
+        expect(this.interpreter(tree)).toEqual(0);
+      });
     });
 
     it('returns an an error if undefined variables are accessed', function () {
@@ -258,88 +244,116 @@ describe('Interpreter', function () {
   });
 
   describe('blocks', function () {
-    it ('returns value of the block', function () {
-      const tree = [
-        {
-          type: 'Block',
-          value: [
-            { type: 'Number', value: '1337' }
-          ]
-        }
-      ];
+    describe('returning values', function () {
+      it ('returns value of the block', function () {
+        const tree = [
+          {
+            type: 'Block',
+            value: [
+              { type: 'Number', value: '1337' }
+            ]
+          }
+        ];
 
-      expect(this.interpreter(tree)).toEqual(1337)
+        expect(this.interpreter(tree)).toEqual(1337)
+      });
     });
 
-    it('does not change variables outside of the block scope', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+    describe('variable scope', function () {
+      it('can creates new initialized variables inside the new scope', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '1' }
           },
-          right: { type: 'Number', value: '1' }
-        },
-        {
-          type: 'Block',
-          value: [
-            {
-              type: 'Equals',
-              left: {
-                type: 'Identifier',
-                value: 'a'
-              },
-              right: { type: 'Number', value: '4' }
-            }
-          ]
-        },
-        { type: 'Identifier', value: 'a' }
-      ];
-
-      expect(this.interpreter(tree)).toEqual(1)
-    });
-
-    it('looks in parent scope if variables are undefined within the current scope', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+          {
+            type: 'Block',
+            value: [
+              {
+                type: 'Initialization',
+                left: { type: 'Identifier', value: 'a' },
+                right: { type: 'Number', value: '4' }
+              }
+            ]
           },
-          right: { type: 'Number', value: '100' }
-        },
-        {
-          type: 'Block',
-          value: [
-            { type: 'Identifier', value: 'a' }
-          ]
-        }
-      ];
+          { type: 'Identifier', value: 'a' }
+        ];
 
-      expect(this.interpreter(tree)).toEqual(100)
-    });
+        expect(this.interpreter(tree)).toEqual(1)
+      });
 
-    it('returns an an error if undefined variables are accessed in any scope', function () {
-      const tree = [
-        {
-          type: 'Equals',
-          left: {
-            type: 'Identifier',
-            value: 'a'
+      it('looks in parent scope if variables are undefined within the current scope', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '100' }
           },
-          right: { type: 'Number', value: '100' }
-        },
-        {
-          type: 'Block',
-          value: [
-            { type: 'Identifier', value: 'b' }
-          ]
-        }
-      ];
+          {
+            type: 'Block',
+            value: [
+              { type: 'Identifier', value: 'a' }
+            ]
+          }
+        ];
 
-      expect(() => this.interpreter(tree)).toThrow(new Error("Undefined variable 'b'"));
+        expect(this.interpreter(tree)).toEqual(100)
+      });
+
+      it('can update values in the parent scope', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '100' }
+          },
+          {
+            type: 'Block',
+            value: [
+              { type: 'Identifier', value: 'a' }
+            ]
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(100)
+      });
+
+      it('returns an an error if accesing an undeclared variable in the new scope', function () {
+        const tree = [
+          {
+            type: 'Initialization',
+            left: { type: 'Identifier', value: 'a' },
+            right: { type: 'Number', value: '100' }
+          },
+          {
+            type: 'Block',
+            value: [
+              { type: 'Identifier', value: 'b' }
+            ]
+          }
+        ];
+
+        expect(() => this.interpreter(tree)).toThrow(new Error("Undefined variable 'b'"));
+      });
+
+      it('variables declared inside the new scope are not accessible outside', function () {
+        const tree = [
+          {
+            type: 'Block',
+            value: [
+              {
+                type: 'Initialization',
+                left: { type: 'Identifier', value: 'a' },
+                right: { type: 'Number', value: '100' }
+              }
+            ]
+          },
+          { type: 'Identifier', value: 'a' }
+        ];
+
+        expect(() => this.interpreter(tree)).toThrow(new Error("Undefined variable 'a'"));
+      });
     });
   });
 
