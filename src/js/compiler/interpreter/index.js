@@ -1,5 +1,6 @@
 import Tokens from '../tokens';
 import _ from 'lodash';
+import { InterpreterError } from '../errors';
 
 const operators = {
   [Tokens.Plus]: (a, b = 0) => a + b,
@@ -151,8 +152,17 @@ class Interpreter {
   visitWhile(node, environment) {
     if (node.type !== 'While') return;
 
+    const MAX_LOOPS = 5000;
+    let currentLoop = 0;
     while (this.visitNode(node.condition, environment)) {
+      currentLoop++;
       this.visitNode(node.value, environment);
+      if (currentLoop === MAX_LOOPS) {
+        throw new InterpreterError({
+          message: `Unable to run while loop. Reached maximum loop limit of '${MAX_LOOPS}'`,
+          token: node
+        });
+      }
     }
 
     return null;

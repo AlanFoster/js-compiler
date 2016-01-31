@@ -12,7 +12,7 @@ const ParserExample = React.createClass({
   },
 
   textForResult(src, result) {
-    if (!(result && result.token && result.token.from)) return JSON.stringify(result, null, 4);
+    if (!_.isNumber(_.get(result, 'token.from'))) return JSON.stringify(result, null, 4);
 
     const { from, to } = result.token;
 

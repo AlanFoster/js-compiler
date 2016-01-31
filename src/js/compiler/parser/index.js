@@ -15,7 +15,7 @@ import {
   EOFSymbol
 } from './symbols';
 
-import { ParseError, UnexpectedTokenError } from './errors';
+import { ParseError, UnexpectedTokenError } from '../errors';
 
 class Parser {
   constructor() {
@@ -54,7 +54,7 @@ class Parser {
     const nextSymbol = this.peek();
     if (isImplemented(nextSymbol.std)) {
       this.advance();
-      return nextSymbol.std(this);
+      return nextSymbol.std(nextSymbol, this);
     }
 
     const expression = this.expression();
@@ -81,7 +81,7 @@ class Parser {
   block() {
     const blockSymbol = this.peek();
     this.advance(Tokens.LeftBrace);
-    return blockSymbol.std(this);
+    return blockSymbol.std(blockSymbol, this);
   }
 
   peek() {
@@ -122,6 +122,8 @@ class Parser {
   }
 }
 
+const preserveMetaDataFor = (token) => _.pick(token, 'from', 'to');
+
 const createParser = function () {
   const parser = new Parser();
 
@@ -150,7 +152,7 @@ const createParser = function () {
     prefixSymbol(Tokens.LeftParen)
       .withLbp(19)
       .withRbp(19)
-      .withNud(function(token, symbolConsumer) {
+      .withNud(function(leftParen, symbolConsumer) {
         const expression = symbolConsumer.expression();
         symbolConsumer.advance(Tokens.RightParen);
 
@@ -287,7 +289,7 @@ const createParser = function () {
   ];
 
   const otherSymbols = [
-    statementSymbol(Tokens.LeftBrace).withStd(function (symbolConsumer) {
+    statementSymbol(Tokens.LeftBrace).withStd(function (currentToken, symbolConsumer) {
       const value = symbolConsumer.statements();
       symbolConsumer.advance(Tokens.RightBrace);
 
@@ -297,7 +299,7 @@ const createParser = function () {
       };
     }),
 
-    statementSymbol(Tokens.Var).withStd(function (symbolConsumer) {
+    statementSymbol(Tokens.Var).withStd(function (currentToken, symbolConsumer) {
       const left = _.extend({}, symbolConsumer.peek());
       symbolConsumer.advance(Tokens.Identifier);
       symbolConsumer.advance(Tokens.Equals);
@@ -311,17 +313,17 @@ const createParser = function () {
       };
     }),
 
-    statementSymbol(Tokens.While).withStd(function (symbolConsumer) {
+    statementSymbol(Tokens.While).withStd(function (currentToken, symbolConsumer) {
       symbolConsumer.advance(Tokens.LeftParen);
       const condition = symbolConsumer.expression();
       symbolConsumer.advance(Tokens.RightParen);
       const block = symbolConsumer.block();
 
-      return {
+      return _.extend({
         type: 'While',
         condition,
         value: block
-      };
+      }, preserveMetaDataFor(currentToken));
     })
   ];
 

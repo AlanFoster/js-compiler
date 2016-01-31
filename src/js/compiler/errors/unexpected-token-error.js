@@ -1,6 +1,6 @@
-import ParseError from './parse-error';
+import CompilerError from './compiler-error';
 
-class UnexpectedTokenError extends ParseError {
+class UnexpectedTokenError extends CompilerError {
   constructor({ expected, actual }) {
     super({
       message: `Unable to parse. Expected token '${expected}' instead got '${_.result(actual, 'type')}'`,

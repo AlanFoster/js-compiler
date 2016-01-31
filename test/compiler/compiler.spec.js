@@ -110,6 +110,16 @@ describe('Compiler', function () {
       `;
 
       expect(this.compiler(program)).toEqual(10);
-    })
+    });
+
+    it ('throws an error when too many loops occur', function () {
+      const program = `
+        while (true) {
+          1 + 1;
+        }
+      `;
+
+      expect(() => this.compiler(program)).toThrow(new Error("Unable to run while loop. Reached maximum loop limit of '5000'"));
+    });
   })
 });
