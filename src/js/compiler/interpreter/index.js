@@ -94,6 +94,7 @@ class Interpreter {
       this.visitBlock,
       this.visitIdentifier,
       this.visitFunction,
+      this.visitWhile,
       this.visitApplication,
       this.error
     ], node, environment);
@@ -145,6 +146,16 @@ class Interpreter {
     const newEnvironment = environment.create();
     const result = this.walk(node.value, newEnvironment);
     return result;
+  }
+
+  visitWhile(node, environment) {
+    if (node.type !== 'While') return;
+
+    while (this.visitNode(node.condition, environment)) {
+      this.visitNode(node.value, environment);
+    }
+
+    return null;
   }
 
   visitIdentifier(node, environment) {

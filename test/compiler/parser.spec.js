@@ -425,6 +425,88 @@ describe('Parser', function () {
     });
   });
 
+  describe ('while', function () {
+    it('parses a while loop with no body', function () {
+      const tokens = [
+        { type: 'While', value: 'While' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'True', value: 'True' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'RightBrace', value: 'RightBrace' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'While',
+          condition: { type: 'True', value: 'True' },
+          value: {
+            type: 'Block',
+            value: []
+          }
+        }
+      ]);
+    });
+
+    it('parses a while loop with a body', function () {
+      const tokens = [
+        { type: 'While', value: 'While' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'True', value: 'True' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' }
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        {
+          type: 'While',
+          condition: { type: 'True', value: 'True' },
+          value: {
+            type: 'Block',
+            value: [
+              { type: 'Number', value: '1' }
+            ]
+          }
+        }
+      ]);
+    });
+
+    it('parses a while loop with a body with statements before and after', function () {
+      const tokens = [
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'While', value: 'While' },
+        { type: 'LeftParen', value: 'LeftParen' },
+        { type: 'True', value: 'True' },
+        { type: 'RightParen', value: 'RightParen' },
+        { type: 'LeftBrace', value: 'LeftBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+        { type: 'RightBrace', value: 'RightBrace' },
+        { type: 'Number', value: '1' },
+        { type: 'Semicolon', value: 'Semicolon' },
+      ];
+
+      expect(this.parser(tokens)).toEqual([
+        { type: 'Number', value: '1' },
+        {
+          type: 'While',
+          condition: { type: 'True', value: 'True' },
+          value: {
+            type: 'Block',
+            value: [
+              { type: 'Number', value: '1' }
+            ]
+          }
+        },
+        { type: 'Number', value: '1' }
+      ]);
+    });
+  });
+
   describe('functions', function() {
     it('parses an anonymous function with no arguments', function () {
       const tokens = [

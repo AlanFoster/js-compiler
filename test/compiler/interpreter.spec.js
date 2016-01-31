@@ -389,6 +389,36 @@ describe('Interpreter', function () {
     });
   });
 
+  describe('while', function () {
+    describe('when the condition is true at least once', function () {
+      xit ('returns null', function () {
+        const tree = [
+          {
+            type: 'While',
+            condition: { type: 'False', value: 'False' },
+            value: [ ]
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(1);
+      });
+    });
+
+    describe('when the condition is false', function () {
+      it ('returns null', function () {
+        const tree = [
+          {
+            type: 'While',
+            condition: { type: 'False', value: 'False' },
+            value: [ ]
+          }
+        ];
+
+        expect(this.interpreter(tree)).toEqual(null);
+      });
+    });
+  });
+
   describe('array creation', function (){
     it ('supports creating an empty array', function () {
       it ('returns true', function () {

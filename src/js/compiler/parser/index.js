@@ -78,6 +78,12 @@ class Parser {
     return statements;
   }
 
+  block() {
+    const blockSymbol = this.peek();
+    this.advance(Tokens.LeftBrace);
+    return blockSymbol.std(this);
+  }
+
   peek() {
     return this.symbolFor(this.tokens[this.position]);
   }
@@ -290,6 +296,7 @@ const createParser = function () {
         value
       };
     }),
+
     statementSymbol(Tokens.Var).withStd(function (symbolConsumer) {
       const left = _.extend({}, symbolConsumer.peek());
       symbolConsumer.advance(Tokens.Identifier);
@@ -301,6 +308,19 @@ const createParser = function () {
         type: 'Initialization',
         left,
         right
+      };
+    }),
+
+    statementSymbol(Tokens.While).withStd(function (symbolConsumer) {
+      symbolConsumer.advance(Tokens.LeftParen);
+      const condition = symbolConsumer.expression();
+      symbolConsumer.advance(Tokens.RightParen);
+      const block = symbolConsumer.block();
+
+      return {
+        type: 'While',
+        condition,
+        value: block
       };
     })
   ];

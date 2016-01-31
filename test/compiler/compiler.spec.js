@@ -96,4 +96,20 @@ describe('Compiler', function () {
       expect(this.compiler(program)).toEqual(22);
     });
   });
+
+  describe('while loops', function () {
+    it ('terminates with a basic counting loop', function () {
+      const program = `
+        var i = 0;
+
+        while (i < 10) {
+          i = i + 1;
+        }
+
+        i;
+      `;
+
+      expect(this.compiler(program)).toEqual(10);
+    })
+  })
 });
